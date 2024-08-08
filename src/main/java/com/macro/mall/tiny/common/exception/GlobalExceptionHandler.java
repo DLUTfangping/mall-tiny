@@ -1,6 +1,7 @@
 package com.macro.mall.tiny.common.exception;
 
 import com.macro.mall.tiny.common.api.CommonResult;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -52,5 +53,18 @@ public class GlobalExceptionHandler {
             }
         }
         return CommonResult.validateFailed(message);
+    }
+
+    /**
+     * @Description: 唯一键重复判定
+     * @Author: Pikachu
+     * @date: 2024/8/8 7:24 AM
+     * @param: [ex]
+     * @return: com.macro.mall.tiny.common.api.CommonResult
+     **/
+    @ResponseBody
+    @ExceptionHandler(DuplicateKeyException.class)
+    public CommonResult handleDuplicateKeyException(DuplicateKeyException ex) {
+        return CommonResult.duplicateKey();
     }
 }

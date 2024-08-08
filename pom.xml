@@ -13,7 +13,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <skipTests>true</skipTests>
-        <docker.host>http://192.168.3.105:2375</docker.host>
+        <docker.host>http://121.196.218.19:2375</docker.host>
+        <docker.push.registry>http://121.196.218.19:5000</docker.push.registry>
         <docker.maven.plugin.version>0.40.0</docker.maven.plugin.version>
         <druid.version>1.2.14</druid.version>
         <hutool.version>5.8.9</hutool.version>
@@ -149,28 +150,32 @@
                 <configuration>
                     <!-- Docker 远程管理地址-->
                     <dockerHost>${docker.host}</dockerHost>
+                    <!-- Docker 推送镜像仓库地址-->
+                    <pushRegistry>${docker.push.registry}</pushRegistry>
                     <images>
                         <image>
                             <!--定义镜像名称-->
-                            <name>mall-tiny/${project.name}:${project.version}</name>
+                            <name>121.196.218.19:5000/mall-tiny/${project.name}:${project.version}</name>
                             <!--定义镜像构建行为-->
                             <build>
-                                <!--定义基础镜像-->
-                                <from>openjdk:8</from>
-                                <args>
-                                    <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                                </args>
-                                <!--定义哪些文件拷贝到容器中-->
-                                <assembly>
-                                    <!--定义拷贝到容器的目录-->
-                                    <targetDir>/</targetDir>
-                                    <!--只拷贝生成的jar包-->
-                                    <descriptorRef>artifact</descriptorRef>
-                                </assembly>
-                                <!--定义容器启动命令-->
-                                <entryPoint>["java", "-jar","/${project.build.finalName}.jar"]</entryPoint>
-                                <!--定义维护者-->
-                                <maintainer>macrozheng</maintainer>
+<!--                                下面的方式和使用Dockerfile的方式二选一-->
+<!--                                &lt;!&ndash;定义基础镜像&ndash;&gt;-->
+<!--                                <from>openjdk:8</from>-->
+<!--                                <args>-->
+<!--                                    <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>-->
+<!--                                </args>-->
+<!--                                &lt;!&ndash;定义哪些文件拷贝到容器中&ndash;&gt;-->
+<!--                                <assembly>-->
+<!--                                    &lt;!&ndash;定义拷贝到容器的目录&ndash;&gt;-->
+<!--                                    <targetDir>/</targetDir>-->
+<!--                                    &lt;!&ndash;只拷贝生成的jar包&ndash;&gt;-->
+<!--                                    <descriptorRef>artifact</descriptorRef>-->
+<!--                                </assembly>-->
+<!--                                &lt;!&ndash;定义容器启动命令&ndash;&gt;-->
+<!--                                <entryPoint>["java", "-jar","/${project.build.finalName}.jar"]</entryPoint>-->
+<!--                                &lt;!&ndash;定义维护者&ndash;&gt;-->
+<!--                                <maintainer>macrozheng</maintainer>-->
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
                             </build>
                         </image>
                     </images>

@@ -1,5 +1,6 @@
 package com.macro.mall.tiny.modules.fms.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -21,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements InvoiceService {
 
+    @Resource
+    private InvoiceMapper invoiceMapper;
+
     @Override
     public boolean create(InvoiceParam invoiceParam) {
         Invoice invoice = new Invoice();
@@ -44,13 +49,6 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         save(invoice);
         return true;
     }
-
-//    @Override
-//    public boolean logicDeleteById(Integer id) {
-//        LambdaUpdateWrapper<Invoice> updateWrapper = new LambdaUpdateWrapper<>();
-//        updateWrapper.eq(Invoice::getId, id).set(Invoice::getStatus, Invoice.STATUS_UN_NORMAL);
-//        return update(null, updateWrapper);
-//    }
 
     @Override
     public Page<Invoice> list(String invoiceNumber, String licensePlate,LocalDate invoiceDate, Integer pageSize, Integer pageNum, Integer status) {
@@ -61,7 +59,16 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
             lambda.like(Invoice::getInvoiceNumber,invoiceNumber);
         }
         if(StrUtil.isNotEmpty(licensePlate)){
-            lambda.like(Invoice::getLicensePlate,licensePlate.trim());
+            // 前端传递的是字符串 津E22416, 津E18683
+            // 需要拆分字符串列表，注意需要将获取的列表每项需要去掉多余的空格
+            List<String> plates = StrUtil.split(licensePlate, ",");
+            if (plates.size() == 1) {
+                lambda.like(Invoice::getLicensePlate,plates.stream().findFirst().get());
+            }
+             else {
+                 plates.forEach(System.out::println);
+                lambda.in(Invoice::getLicensePlate, plates);
+            }
         }
         if (invoiceDate != null) {
             lambda.eq(Invoice::getInvoiceDate,invoiceDate);
@@ -84,7 +91,6 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         if (!(list != null && !list.isEmpty())) {
             return statisticsVo;
         }
-
         Map<Date, List<Invoice>> collect = list.stream().collect(Collectors.groupingBy(Invoice::getInvoiceDate));
         List<StatisticsVo.DateAmount> dateAmountList = new ArrayList<>();
         List<StatisticsVo.DateAmount> finalDateAmountList = dateAmountList;
@@ -122,6 +128,11 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         // 6.组装以日期为集合的列表数据
         dateAmountList = finalDateAmountList.stream().sorted(Comparator.comparing(StatisticsVo.DateAmount::getDate)).collect(Collectors.toList());
         statisticsVo.setDateAmountList(dateAmountList);
+
+        // 7.获得有相同车牌的车牌号
+        String repeatLicensePlate = getRepeatLicensePlate(list);
+        statisticsVo.setRepeatLicensePlate(repeatLicensePlate);
+
         return statisticsVo;
     }
 
@@ -185,5 +196,22 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
                 .between(Invoice::getInvoiceDate,  invoiceStatusParam.getStartDate(), invoiceStatusParam.getEndDate())
                 .set(Invoice::getStatus, invoiceStatusParam.getStatus());
         return update(null, updateWrapper);
+    }
+
+
+    private String getRepeatLicensePlate(List<Invoice> invoices) {
+        if (CollectionUtil.isEmpty(invoices)) {
+            return "";
+        }
+        // 找出车牌号相同的对象
+        Map<String, List<Invoice>> groupedByLicensePlate = invoices.stream()
+                .collect(Collectors.groupingBy(Invoice::getLicensePlate));
+
+        List<String> keysWithMoreThanOneInvoices = groupedByLicensePlate.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        return StrUtil.join(", ", keysWithMoreThanOneInvoices);
     }
 }

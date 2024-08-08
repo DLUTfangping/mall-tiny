@@ -23,6 +23,8 @@ public class StatisticsVo {
     private String invalidAmount;
     @ApiModelProperty(value = "当日打车费")
     private List<DateAmount> dateAmountList;
+    @ApiModelProperty(value = "重复的车牌号")
+    private String repeatLicensePlate;
     @Data
     public static class DateAmount {
         @ApiModelProperty(value = "日期")

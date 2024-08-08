@@ -25,7 +25,7 @@ mybatis-plus:
   configuration:
     auto-mapping-behavior: partial
     map-underscore-to-camel-case: true
-
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  开启后日志更加详尽
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
   secret: mall-admin-secret #JWT加解密使用的密钥

@@ -97,6 +97,12 @@ public class CommonResult<T> {
     public static <T> CommonResult<T> forbidden(T data) {
         return new CommonResult<T>(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage(), data);
     }
+    /**
+     * 重复的key
+     */
+    public static <T> CommonResult<T> duplicateKey() {
+        return new CommonResult<T>(ResultCode.DuplicateKey.getCode(), ResultCode.DuplicateKey.getMessage(), null);
+    }
 
     public long getCode() {
         return code;
