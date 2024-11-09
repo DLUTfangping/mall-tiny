@@ -13,8 +13,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <skipTests>true</skipTests>
-        <docker.host>http://121.196.218.19:2375</docker.host>
-        <docker.push.registry>http://121.196.218.19:5000</docker.push.registry>
+        <docker.host>http://47.98.195.104:2375</docker.host>
+        <docker.push.registry>http://47.98.195.104:5000</docker.push.registry>
         <docker.maven.plugin.version>0.40.0</docker.maven.plugin.version>
         <druid.version>1.2.14</druid.version>
         <hutool.version>5.8.9</hutool.version>
@@ -137,16 +137,16 @@
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.maven.plugin.version}</version>
-<!--                <executions>-->
-<!--                    &lt;!&ndash;如果想在项目打包时构建镜像添加&ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <id>build-image</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>build</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
+                <executions>
+                    <!--如果想在项目打包时构建镜像添加-->
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <!-- Docker 远程管理地址-->
                     <dockerHost>${docker.host}</dockerHost>
@@ -155,7 +155,7 @@
                     <images>
                         <image>
                             <!--定义镜像名称-->
-                            <name>121.196.218.19:5000/mall-tiny/${project.name}:${project.version}</name>
+                            <name>47.98.195.104:5000/mall-tiny/${project.name}:${project.version}</name>
                             <!--定义镜像构建行为-->
                             <build>
 <!--                                下面的方式和使用Dockerfile的方式二选一-->

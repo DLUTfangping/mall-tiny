@@ -63,7 +63,12 @@ public class InvoiceController {
     @ApiOperation("删除发票")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public CommonResult delete(@PathVariable Integer id) {
-        boolean success = invoiceService.removeById(id);
+        boolean success = false;
+        if (id < 0) {
+             success = invoiceService.remove(null);
+        } else {
+             success = invoiceService.removeById(id);
+        }
         if (success) {
             return CommonResult.success(null);
         } else {
