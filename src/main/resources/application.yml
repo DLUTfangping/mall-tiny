@@ -9,6 +9,7 @@ spring:
   # 设置时区
   jackson:
     time-zone:  Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
   #  main:
 #    allow-circular-references: true
   mvc:
