@@ -32,7 +32,7 @@ public class MgsBed implements Serializable {
     private Integer id;
 
     @ApiModelProperty("关联 Room 表")
-    private String roomNum;
+    private String roomNumber;
 
     @ApiModelProperty("床位编号")
     private String bedNumber;

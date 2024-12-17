@@ -1,16 +1,22 @@
 package com.macro.mall.tiny.modules.mgs.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.modules.mgs.dto.MgsBedParam;
 import com.macro.mall.tiny.modules.mgs.mapper.MgsBedMapper;
 import com.macro.mall.tiny.modules.mgs.model.MgsBed;
+import com.macro.mall.tiny.modules.mgs.model.MgsRooms;
 import com.macro.mall.tiny.modules.mgs.service.MgsBedService;
+import com.macro.mall.tiny.modules.mgs.service.MgsRoomsService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -23,11 +29,38 @@ import java.util.Date;
  */
 @Service
 public class MgsBedServiceImpl extends ServiceImpl<MgsBedMapper, MgsBed> implements MgsBedService {
+    @Lazy
+    @Resource
+    private MgsRoomsService mgsRoomsService;
     @Override
-    public boolean save(MgsBedParam param) {
+    public CommonResult save(MgsBedParam param) {
+        // 查询病房中病床的最大容量
+        String roomNumber = param.getRoomNumber();
+        MgsRooms mgsRooms = mgsRoomsService.getOne(new QueryWrapper<MgsRooms>(new MgsRooms()).eq("room_number", roomNumber), false);
+        Integer capacity = mgsRooms.getCapacity();
+        // 查询出病房中现有病床的数量，包含启用禁用的
+        Integer enableNum = countBedsByRoomAndStatus(roomNumber, null);
+        if (++enableNum > capacity) return CommonResult.failed("房间容量不足，无法新增");
+
+        // 获取病房中最大病床编号
+        MgsBed maxMgsBed = getOne(new QueryWrapper<MgsBed>(new MgsBed()).eq("room_number", roomNumber).orderByDesc("bed_number"),false);
+        // 病房编号sr-1 病床编号sr-1-1  sr-1-2
+        if (maxMgsBed != null) {
+            // 使用hu-tools中的工具类获取字符串"-"后的数字
+            String[] split = maxMgsBed.getBedNumber().split("-");
+            String dep = split[0];
+            String maxNum = split[2];
+            int maxBedNumberInt = Integer.parseInt(maxNum);
+            maxBedNumberInt++;
+            param.setBedNumber(param.getRoomNumber() + "-" +maxBedNumberInt);
+        } else {
+            param.setBedNumber(param.getRoomNumber() + "-1");
+        }
         MgsBed mgsBed = new MgsBed();
         BeanUtil.copyProperties(param, mgsBed);
-        return save(mgsBed);
+        boolean res = save(mgsBed);
+        if (res) return CommonResult.success(null);
+       return CommonResult.failed("新增失败");
     }
 
     @Override
@@ -45,11 +78,36 @@ public class MgsBedServiceImpl extends ServiceImpl<MgsBedMapper, MgsBed> impleme
     }
 
     @Override
-    public Page<MgsBed> list(Integer status, Integer pageSize, Integer pageNum) {
+    public Page<MgsBed> list(Integer status, String roomNumber, Integer pageSize, Integer pageNum) {
         QueryWrapper<MgsBed> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<MgsBed> lambda = wrapper.lambda();
-        lambda.eq(MgsBed::getStatus, status);
+        if (status != null) {
+            lambda.eq(MgsBed::getStatus, status);
+        }
+        if (StrUtil.isNotBlank(roomNumber)) {
+            lambda.eq(MgsBed::getRoomNumber, roomNumber);
+        }
         Page<MgsBed> page = new Page<>(pageNum,pageSize);
         return page(page, wrapper);
+    }
+
+    /**
+     * 根据 roomNum 和 status 统计病床数量
+     *
+     * @param roomNum 病房编号
+     * @param status 床位状态
+     * @return 满足条件的病床数量
+     */
+    @Override
+    public int countBedsByRoomAndStatus(String roomNum, Integer status) {
+        // 构造查询条件
+        QueryWrapper<MgsBed> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("room_number", roomNum); // 查询 roomNum
+        if (status != null) {
+            queryWrapper.eq("status", status); // 查询 status
+        }
+        int c = (int)count(queryWrapper);
+        // 使用 count 方法统计数量
+        return c ;
     }
 }

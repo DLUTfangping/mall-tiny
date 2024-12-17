@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.macro.mall.tiny.modules.mgs.model.MgsBed">
         <id column="id" property="id" />
-        <result column="room_num" property="roomNum" />
+        <result column="room_num" property="roomNumber" />
         <result column="bed_number" property="bedNumber" />
         <result column="bed_name" property="bedName" />
         <result column="status" property="status" />

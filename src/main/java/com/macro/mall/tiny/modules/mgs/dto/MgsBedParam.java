@@ -19,7 +19,7 @@ public class MgsBedParam {
     private Integer id;
 
     @ApiModelProperty("关联 Room 表")
-    private String roomNum;
+    private String roomNumber;
 
     @ApiModelProperty("床位编号")
     private String bedNumber;
@@ -35,4 +35,10 @@ public class MgsBedParam {
 
     @ApiModelProperty("更新时间")
     private Date updatedAt;
+
+    public String getShortCode() {
+        if (this.bedNumber == null) return "";
+        String[] split = this.bedNumber.split("-");
+        return split[0];
+    }
 }

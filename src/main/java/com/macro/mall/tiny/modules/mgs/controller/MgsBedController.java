@@ -34,13 +34,8 @@ public class MgsBedController {
 
     @ApiOperation("添加病床")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-
     public CommonResult create(@Validated @RequestBody MgsBedParam param) {
-        boolean success = mgsBedService.save(param);
-        if (success) {
-            return CommonResult.success(null);
-        }
-        return CommonResult.failed();
+        return mgsBedService.save(param);
     }
     @ApiOperation("删除病床")
     @RequestMapping(value = "/delete/{bedNumber}", method = RequestMethod.POST)
@@ -66,9 +61,10 @@ public class MgsBedController {
     @ApiOperation("根据查询条件分页获取病床列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public CommonResult<CommonPage<MgsBed>> list(@RequestParam(value = "status", required = false) Integer status,
+                                                 @RequestParam(value = "roomNumber", required = true) String roomNumber,
                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                  @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<MgsBed> invoiceList = mgsBedService.list(status, pageSize, pageNum);
+        Page<MgsBed> invoiceList = mgsBedService.list(status, roomNumber, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(invoiceList));
     }
 

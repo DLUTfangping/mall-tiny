@@ -39,4 +39,10 @@ public class MgsRoomsParam {
 
     @ApiModelProperty("更新时间")
     private Date updatedAt;
+
+    public String getShortCode() {
+        if (this.departmentNum == null) return "";
+        String[] split = this.departmentNum.split("-");
+        return split[0];
+    }
 }

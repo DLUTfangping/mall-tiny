@@ -34,7 +34,6 @@ public class MgsRoomsController {
 
     @ApiOperation("添加病房")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-
     public CommonResult create(@Validated @RequestBody MgsRoomsParam param) {
         boolean success = mgsRoomsService.save(param);
         if (success) {
@@ -66,11 +65,13 @@ public class MgsRoomsController {
     @ApiOperation("根据查询条件分页获取病房列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public CommonResult<CommonPage<MgsRooms>> list(@RequestParam(value = "status", required = false) Integer status,
+                                                         @RequestParam(value = "departmentNum", defaultValue = "sr-dep") String departmentNum,
                                                          @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<MgsRooms> invoiceList = mgsRoomsService.list(status, pageSize, pageNum);
+        Page<MgsRooms> invoiceList = mgsRoomsService.list(status, departmentNum, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(invoiceList));
     }
+
 
 }
 

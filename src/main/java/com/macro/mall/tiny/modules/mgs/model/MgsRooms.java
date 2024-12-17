@@ -1,6 +1,7 @@
 package com.macro.mall.tiny.modules.mgs.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -43,6 +44,11 @@ public class MgsRooms implements Serializable {
     @ApiModelProperty("病房床位数")
     private Integer capacity;
 
+    @ApiModelProperty("启用的床位数")
+//    添加注释说明该字段不是数据库字段
+    @TableField(exist = false)
+    private Integer enableNum;
+
     @ApiModelProperty("病房状态（0：可用，1：占用，2：删除）")
     private Integer status;
 
@@ -51,6 +57,5 @@ public class MgsRooms implements Serializable {
 
     @ApiModelProperty("更新时间")
     private Date updatedAt;
-
 
 }
