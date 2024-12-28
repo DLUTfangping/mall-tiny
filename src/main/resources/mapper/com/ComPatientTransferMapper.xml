@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.tiny.modules.com.mapper.ComPatientTransferMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.macro.mall.tiny.modules.com.model.ComPatientTransfer">
+        <id column="id" property="id" />
+        <result column="patient_id" property="patientId" />
+        <result column="from_department_id" property="fromDepartmentId" />
+        <result column="to_department_id" property="toDepartmentId" />
+        <result column="from_room_id" property="fromRoomId" />
+        <result column="to_room_id" property="toRoomId" />
+        <result column="from_bed_id" property="fromBedId" />
+        <result column="to_bed_id" property="toBedId" />
+        <result column="transfer_time" property="transferTime" />
+        <result column="receive_time" property="receiveTime" />
+        <result column="reject_time" property="rejectTime" />
+        <result column="transfer_status" property="transferStatus" />
+        <result column="note" property="note" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+</mapper>

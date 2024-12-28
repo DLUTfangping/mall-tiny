@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.tiny.modules.mgs.mapper.MgsInstitutionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.macro.mall.tiny.modules.mgs.model.MgsInstitution">
+        <id column="id" property="id" />
+        <result column="institution_num" property="institutionNum" />
+        <result column="area_number" property="areaNumber" />
+        <result column="institution_code" property="institutionCode" />
+        <result column="name" property="name" />
+        <result column="superior_address" property="superiorAddress" />
+        <result column="superior_name" property="superiorName" />
+        <result column="superior_num" property="superiorNum" />
+        <result column="superior_code" property="superiorCode" />
+        <result column="secert_key" property="secertKey" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+</mapper>
