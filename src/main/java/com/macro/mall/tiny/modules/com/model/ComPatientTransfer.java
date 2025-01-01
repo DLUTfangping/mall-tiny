@@ -64,14 +64,17 @@ public class ComPatientTransfer implements Serializable {
     @ApiModelProperty("转移状态（0 待接收、1 已接收、2 已驳回）")
     private Integer transferStatus;
 
-    @ApiModelProperty("备注")
-    private String note;
+    @ApiModelProperty("驳回原因")
+    private String rejectReason;
 
     @ApiModelProperty("创建时间")
     private Date createdAt;
 
     @ApiModelProperty("更新时间")
     private Date updatedAt;
+
+    @ApiModelProperty("是否是最新转移记录（0-否，1-是）")
+    private Integer current;
 
 
 }

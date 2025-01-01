@@ -31,10 +31,12 @@ public class MgsRoomsServiceImpl extends ServiceImpl<MgsRoomsMapper, MgsRooms> i
     private MgsBedService mgsBedService;
     @Override
     public boolean save(MgsRoomsParam param) {
-        // 根据departmentNum查询roomNumber排序最大的值
-        MgsRooms maxRoomNumber = getOne(new QueryWrapper<MgsRooms>(new MgsRooms()).eq("department_num", param.getDepartmentNum()).orderByDesc("room_number"),false);
+        // 根据departmentId查询roomNumber排序最大的值
+        MgsRooms maxRoomNumber = getOne(new LambdaQueryWrapper<MgsRooms>(new MgsRooms())
+                .eq(MgsRooms::getDepartmentId, param.getDepartmentNum()).orderByDesc(MgsRooms::getRoomNumber),false);
+        // 在roomNumber基础上加1
         if (maxRoomNumber != null) {
-            // 使用hu-tools中的工具类获取字符串"-"后的数字
+            // 使用hu-tools中的工具类获取字符串"-"后的数字  sr-1  sr-2
             String[] split = maxRoomNumber.getRoomNumber().split("-");
             String dep = split[0];
             String maxNum = split[1];
@@ -51,7 +53,7 @@ public class MgsRoomsServiceImpl extends ServiceImpl<MgsRoomsMapper, MgsRooms> i
 
     @Override
     public boolean removeByRoomNumber(String roomNumber) {
-        boolean success = remove(new QueryWrapper<MgsRooms>(new MgsRooms()).eq("room_number", roomNumber));
+        boolean success = remove(new LambdaQueryWrapper<MgsRooms>(new MgsRooms()).eq(MgsRooms::getRoomNumber, roomNumber));
         return success;
     }
 
@@ -60,17 +62,17 @@ public class MgsRoomsServiceImpl extends ServiceImpl<MgsRoomsMapper, MgsRooms> i
         MgsRooms mgsRooms = new MgsRooms();
         mgsRooms.setUpdatedAt(new Date());
         BeanUtil.copyProperties(param, mgsRooms);
-        return update(mgsRooms, new QueryWrapper<MgsRooms>(new MgsRooms()).eq("room_number", param.getRoomNumber()));
+        return update(mgsRooms, new LambdaQueryWrapper<MgsRooms>(new MgsRooms()).eq(MgsRooms::getRoomNumber, param.getRoomNumber()));
     }
 
     @Override
-    public Page<MgsRooms> list(Integer status, String departmentNum, Integer pageSize, Integer pageNum) {
+    public Page<MgsRooms> list(Integer status, Integer departmentId, Integer pageSize, Integer pageNum) {
         QueryWrapper<MgsRooms> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<MgsRooms> lambda = wrapper.lambda();
         if (status != null) {
             lambda.eq(MgsRooms::getStatus, status);
         }
-        lambda.eq(MgsRooms::getDepartmentNum, departmentNum);
+        lambda.eq(MgsRooms::getDepartmentId, departmentId);
         Page<MgsRooms> page = new Page<>(pageNum,pageSize);
         Page<MgsRooms> resultPage = page(page, wrapper);
         // 遍历查询结果，设置 enableNum 字段
@@ -81,4 +83,12 @@ public class MgsRoomsServiceImpl extends ServiceImpl<MgsRoomsMapper, MgsRooms> i
         }
         return resultPage;
     }
+
+    @Override
+    public boolean checkRoom(Integer roomId) {
+        return getById(roomId) != null;
+    }
+
+
+
 }

@@ -2,16 +2,17 @@ package com.macro.mall.tiny.common.enums;
 
 public enum DepartmentCodeEnum {
     MZ(0, "mz","门诊"),
-    SR(1, "sr","收容"),
-    ZZ(2, "zz","重症"),
-    CR(3, "cr","传染"),
-    SS(4, "ss","手术"),
-    YF(5, "yf","药房"),
-    WZ(6, "wz","物资"),
-    JY(7, "yf","检验"),
-    JC(8, "jc","检查"),
-    XX(9, "ss","洗消"),
-    GL(10, "gl","管理");
+    FL(1, "fl", "分类"),
+    SR(2, "sr","收容"),
+    ZZ(3, "zz","重症"),
+    CR(4, "cr","传染"),
+    SS(5, "ss","手术"),
+    YF(6, "yf","药房"),
+    WZ(7, "wz","物资"),
+    JY(8, "yf","检验"),
+    JC(9, "jc","检查"),
+    XX(10, "ss","洗消"),
+    GL(11, "gl","管理");
 
     private final int code;
     private final String shortCode;

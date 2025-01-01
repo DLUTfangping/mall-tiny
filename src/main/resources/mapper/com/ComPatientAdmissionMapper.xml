@@ -17,6 +17,7 @@
         <result column="status" property="status" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
+        <result column="suggestion" property="suggestion" />
     </resultMap>
 
 </mapper>

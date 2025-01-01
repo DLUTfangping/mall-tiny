@@ -1,6 +1,9 @@
 package com.macro.mall.tiny.modules.com.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.macro.mall.tiny.modules.com.dto.TransferDTO;
+import com.macro.mall.tiny.modules.com.dto.TransferQuery;
 import com.macro.mall.tiny.modules.com.model.ComPatientTransfer;
 
 /**
@@ -12,5 +15,7 @@ import com.macro.mall.tiny.modules.com.model.ComPatientTransfer;
  * @since 2024-12-25
  */
 public interface ComPatientTransferMapper extends BaseMapper<ComPatientTransfer> {
+    Page<TransferDTO> getRequestTransfers(Page<TransferDTO> page, TransferQuery transferQuery);
+
 
 }

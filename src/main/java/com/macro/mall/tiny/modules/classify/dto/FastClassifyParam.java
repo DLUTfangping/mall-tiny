@@ -32,8 +32,8 @@ public class FastClassifyParam {
     @PastOrPresent(message = "不能是未来的时间")
     private Date classifyTime;
 
-    @ApiModelProperty("标识号")
-    @NotBlank(message = "标识号不能为空")
+    @ApiModelProperty("手环号")
+    @NotBlank(message = "手环号不能为空")
     private String wristbandName;
 
     @ApiModelProperty("分类去向组室ID")

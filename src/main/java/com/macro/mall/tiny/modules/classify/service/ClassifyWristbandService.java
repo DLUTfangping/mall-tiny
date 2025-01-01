@@ -15,4 +15,6 @@ import com.macro.mall.tiny.modules.classify.model.ClassifyWristband;
 public interface ClassifyWristbandService extends IService<ClassifyWristband> {
     Page<ClassifyWristband> list(Integer status, Integer pageSize, Integer pageNum,
                               String name, String fixedCode, String boundPersonNum);
+
+    boolean checkWristband(String wristbandName);
 }

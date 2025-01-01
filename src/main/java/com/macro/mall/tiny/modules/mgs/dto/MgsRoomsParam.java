@@ -22,6 +22,9 @@ public class MgsRoomsParam {
     @ApiModelProperty("关联 Department 表")
     private String departmentNum;
 
+    @ApiModelProperty("关联 Department 表 id 字段")
+    private Integer departmentId;
+
     @ApiModelProperty("病房编号")
     private String roomNumber;
 

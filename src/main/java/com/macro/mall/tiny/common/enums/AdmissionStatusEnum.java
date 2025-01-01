@@ -5,7 +5,8 @@ package com.macro.mall.tiny.common.enums;
  * 1: 已出院
  */
 public enum AdmissionStatusEnum {
-    IN_HOSPITAL(0, "住院中"),
+    INHOSPITAL(0, "住院中"),
+    TRANSFERRING(2, "转移中"),
     DISCHARGED(1, "已出院");
 
     private final int code;

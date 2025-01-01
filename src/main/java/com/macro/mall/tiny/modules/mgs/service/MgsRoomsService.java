@@ -22,5 +22,7 @@ public interface MgsRoomsService extends IService<MgsRooms> {
 
     boolean updateByRoomNumber(MgsRoomsParam param);
 
-    Page<MgsRooms> list(Integer status, String departmentNum,Integer pageSize, Integer pageNum);
+    Page<MgsRooms> list(Integer status, Integer departmentId,Integer pageSize, Integer pageNum);
+
+    boolean checkRoom(Integer roomId);
 }

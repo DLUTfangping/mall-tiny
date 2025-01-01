@@ -6,6 +6,7 @@
     <resultMap id="BaseResultMap" type="com.macro.mall.tiny.modules.mgs.model.MgsRooms">
         <id column="id" property="id" />
         <result column="department_num" property="departmentNum" />
+        <result column="department_id" property="departmentId" />
         <result column="room_number" property="roomNumber" />
         <result column="room_name" property="roomName" />
         <result column="capacity" property="capacity" />

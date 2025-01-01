@@ -12,5 +12,4 @@ import com.macro.mall.tiny.modules.com.model.ComPatientAdmission;
  * @since 2024-12-25
  */
 public interface ComPatientAdmissionMapper extends BaseMapper<ComPatientAdmission> {
-
 }

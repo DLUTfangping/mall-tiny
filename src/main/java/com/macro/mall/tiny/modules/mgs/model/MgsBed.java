@@ -34,6 +34,9 @@ public class MgsBed implements Serializable {
     @ApiModelProperty("关联 Room 表")
     private String roomNumber;
 
+    @ApiModelProperty("关联 Room 表 id 字段")
+    private Integer roomId;
+
     @ApiModelProperty("床位编号")
     private String bedNumber;
 

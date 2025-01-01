@@ -43,4 +43,11 @@ public class ClassifyWristbandServiceImpl extends ServiceImpl<ClassifyWristbandM
         Page<ClassifyWristband> page = new Page<>(pageNum,pageSize);
         return page(page, wrapper);
     }
+
+    @Override
+    public boolean checkWristband(String wristbandName) {
+        LambdaQueryWrapper<ClassifyWristband> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ClassifyWristband::getName, wristbandName);
+        return count(queryWrapper) > 0;
+    }
 }

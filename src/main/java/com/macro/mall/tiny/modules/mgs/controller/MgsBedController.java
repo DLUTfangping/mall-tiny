@@ -38,9 +38,9 @@ public class MgsBedController {
         return mgsBedService.save(param);
     }
     @ApiOperation("删除病床")
-    @RequestMapping(value = "/delete/{bedNumber}", method = RequestMethod.POST)
-    public CommonResult delete(@PathVariable String bedNumber) {
-        boolean success = mgsBedService.removeByBedNumber(bedNumber);
+    @RequestMapping(value = "/delete/{bedId}", method = RequestMethod.POST)
+    public CommonResult delete(@PathVariable Integer bedId) {
+        boolean success = mgsBedService.removeById(bedId);
         if (success) {
             return CommonResult.success(null);
         } else {
@@ -50,8 +50,8 @@ public class MgsBedController {
 
     @ApiOperation("修改病床")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public CommonResult update(@RequestBody MgsBedParam param) {
-        boolean success = mgsBedService.updateByBedNumber(param);
+    public CommonResult update(@RequestBody MgsBed param) {
+        boolean success = mgsBedService.updateById(param);
         if (success) {
             return CommonResult.success(null);
         }
@@ -61,10 +61,10 @@ public class MgsBedController {
     @ApiOperation("根据查询条件分页获取病床列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public CommonResult<CommonPage<MgsBed>> list(@RequestParam(value = "status", required = false) Integer status,
-                                                 @RequestParam(value = "roomNumber", required = true) String roomNumber,
+                                                 @RequestParam(value = "roomId") Integer roomId,
                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                  @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<MgsBed> invoiceList = mgsBedService.list(status, roomNumber, pageSize, pageNum);
+        Page<MgsBed> invoiceList = mgsBedService.list(status, roomId, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(invoiceList));
     }
 

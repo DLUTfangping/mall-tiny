@@ -2,8 +2,11 @@ package com.macro.mall.tiny.modules.mgs.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.macro.mall.tiny.modules.mgs.dto.BedCountOfRoomDTO;
 import com.macro.mall.tiny.modules.mgs.dto.MgsDepartmentsParam;
 import com.macro.mall.tiny.modules.mgs.model.MgsDepartments;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,4 +24,11 @@ public interface MgsDepartmentsService extends IService<MgsDepartments> {
     boolean updateById(MgsDepartmentsParam param);
 
     Page<MgsDepartments> list(Integer status, Integer pageSize, Integer pageNum);
+
+    MgsDepartments getByNameStatus(String name, Integer status);
+
+    boolean checkDepartment(Integer departmentId);
+
+    List<BedCountOfRoomDTO> getBedCountOfRoomList(Integer departmentId);
+
 }

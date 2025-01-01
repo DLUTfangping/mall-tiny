@@ -21,6 +21,9 @@ public class MgsBedParam {
     @ApiModelProperty("关联 Room 表")
     private String roomNumber;
 
+    @ApiModelProperty("关联 Room 表 id字段")
+    private Integer roomId;
+
     @ApiModelProperty("床位编号")
     private String bedNumber;
 

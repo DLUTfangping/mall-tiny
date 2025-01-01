@@ -42,9 +42,9 @@ public class MgsRoomsController {
         return CommonResult.failed();
     }
     @ApiOperation("删除病房")
-    @RequestMapping(value = "/delete/{roomNumber}", method = RequestMethod.POST)
-    public CommonResult delete(@PathVariable String roomNumber) {
-        boolean success = mgsRoomsService.removeByRoomNumber(roomNumber);
+    @RequestMapping(value = "/delete/{roomId}", method = RequestMethod.POST)
+    public CommonResult delete(@PathVariable Integer roomId) {
+        boolean success = mgsRoomsService.removeById(roomId);
         if (success) {
             return CommonResult.success(null);
         } else {
@@ -54,8 +54,8 @@ public class MgsRoomsController {
 
     @ApiOperation("修改病房")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public CommonResult update(@RequestBody MgsRoomsParam param) {
-        boolean success = mgsRoomsService.updateByRoomNumber(param);
+    public CommonResult update(@RequestBody MgsRooms param) {
+        boolean success = mgsRoomsService.updateById(param);
         if (success) {
             return CommonResult.success(null);
         }
@@ -65,10 +65,10 @@ public class MgsRoomsController {
     @ApiOperation("根据查询条件分页获取病房列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public CommonResult<CommonPage<MgsRooms>> list(@RequestParam(value = "status", required = false) Integer status,
-                                                         @RequestParam(value = "departmentNum", defaultValue = "sr-dep") String departmentNum,
+                                                         @RequestParam(value = "departmentId") Integer departmentId,
                                                          @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<MgsRooms> invoiceList = mgsRoomsService.list(status, departmentNum, pageSize, pageNum);
+        Page<MgsRooms> invoiceList = mgsRoomsService.list(status, departmentId, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(invoiceList));
     }
 

@@ -1,7 +1,6 @@
 package com.macro.mall.tiny.modules.mgs.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,16 +33,18 @@ public class MgsBedServiceImpl extends ServiceImpl<MgsBedMapper, MgsBed> impleme
     private MgsRoomsService mgsRoomsService;
     @Override
     public CommonResult save(MgsBedParam param) {
-        // 查询病房中病床的最大容量
+        // 判断添加病床是否会超限
+        Integer roomId = param.getRoomId();
         String roomNumber = param.getRoomNumber();
-        MgsRooms mgsRooms = mgsRoomsService.getOne(new QueryWrapper<MgsRooms>(new MgsRooms()).eq("room_number", roomNumber), false);
+        MgsRooms mgsRooms = mgsRoomsService.getOne(new LambdaQueryWrapper<MgsRooms>(new MgsRooms()).eq(MgsRooms::getId, roomId), false);
         Integer capacity = mgsRooms.getCapacity();
         // 查询出病房中现有病床的数量，包含启用禁用的
         Integer enableNum = countBedsByRoomAndStatus(roomNumber, null);
         if (++enableNum > capacity) return CommonResult.failed("房间容量不足，无法新增");
 
         // 获取病房中最大病床编号
-        MgsBed maxMgsBed = getOne(new QueryWrapper<MgsBed>(new MgsBed()).eq("room_number", roomNumber).orderByDesc("bed_number"),false);
+        MgsBed maxMgsBed = getOne(new LambdaQueryWrapper<MgsBed>(new MgsBed())
+                .eq(MgsBed::getRoomId, roomId).orderByDesc(MgsBed::getBedNumber),false);
         // 病房编号sr-1 病床编号sr-1-1  sr-1-2
         if (maxMgsBed != null) {
             // 使用hu-tools中的工具类获取字符串"-"后的数字
@@ -78,17 +79,16 @@ public class MgsBedServiceImpl extends ServiceImpl<MgsBedMapper, MgsBed> impleme
     }
 
     @Override
-    public Page<MgsBed> list(Integer status, String roomNumber, Integer pageSize, Integer pageNum) {
-        QueryWrapper<MgsBed> wrapper = new QueryWrapper<>();
-        LambdaQueryWrapper<MgsBed> lambda = wrapper.lambda();
+    public Page<MgsBed> list(Integer status, Integer roomId, Integer pageSize, Integer pageNum) {
+        LambdaQueryWrapper<MgsBed> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (status != null) {
-            lambda.eq(MgsBed::getStatus, status);
+            lambdaQueryWrapper.eq(MgsBed::getStatus, status);
         }
-        if (StrUtil.isNotBlank(roomNumber)) {
-            lambda.eq(MgsBed::getRoomNumber, roomNumber);
+        if (roomId != null) {
+            lambdaQueryWrapper.eq(MgsBed::getRoomId, roomId);
         }
         Page<MgsBed> page = new Page<>(pageNum,pageSize);
-        return page(page, wrapper);
+        return page(page, lambdaQueryWrapper);
     }
 
     /**

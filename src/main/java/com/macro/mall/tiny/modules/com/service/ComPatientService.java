@@ -13,4 +13,5 @@ import com.macro.mall.tiny.modules.com.model.ComPatient;
  */
 public interface ComPatientService extends IService<ComPatient> {
 
+
 }

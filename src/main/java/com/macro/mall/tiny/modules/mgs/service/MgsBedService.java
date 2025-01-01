@@ -22,7 +22,7 @@ public interface MgsBedService extends IService<MgsBed> {
 
     boolean updateByBedNumber(MgsBedParam param);
 
-    Page<MgsBed> list(Integer status, String roomNumber, Integer pageSize, Integer pageNum);
+    Page<MgsBed> list(Integer status, Integer roomId, Integer pageSize, Integer pageNum);
 
     int countBedsByRoomAndStatus(String roomNum, Integer status);
 }

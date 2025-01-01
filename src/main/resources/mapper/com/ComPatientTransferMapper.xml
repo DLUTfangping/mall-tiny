@@ -16,9 +16,33 @@
         <result column="receive_time" property="receiveTime" />
         <result column="reject_time" property="rejectTime" />
         <result column="transfer_status" property="transferStatus" />
-        <result column="note" property="note" />
+        <result column="reject_reason" property="rejectReason" />
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
+        <result column="current" property="current" />
     </resultMap>
+
+    <select id="getRequestTransfers" resultType="com.macro.mall.tiny.modules.com.dto.TransferDTO"
+            parameterType="com.macro.mall.tiny.modules.com.dto.TransferQuery">
+        SELECT
+            t.id AS transferId,
+            p.id AS patientId,
+            p.name AS patientName,
+            t.transfer_time AS transferTime,
+            t.to_department_id AS toDepartmentId,
+            t.reject_reason AS rejectReason,
+            a.suggestion AS admissionSuggestion
+        FROM
+            com_patient_transfer t
+                JOIN
+            com_patient p ON t.patient_id = p.id
+                LEFT JOIN
+            com_patient_admission a ON t.patient_id = a.patient_id
+        WHERE
+            t.from_department_id = #{currentDepartmentId}
+          AND p.name = #{name}
+          AND t.transfer_status = #{transferStatus}
+          AND t.current = #{current}
+    </select>
 
 </mapper>
