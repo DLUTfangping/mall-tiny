@@ -6,11 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.macro.mall.tiny.common.comutil.CommonUtil;
 import com.macro.mall.tiny.modules.com.model.ComPatientAdmission;
 import com.macro.mall.tiny.modules.com.service.ComPatientAdmissionService;
-import com.macro.mall.tiny.modules.com.service.ComPatientService;
-import com.macro.mall.tiny.modules.com.service.ComPatientTransferService;
 import com.macro.mall.tiny.modules.com.service.CommonService;
 import com.macro.mall.tiny.modules.mgs.model.MgsInstitution;
-import com.macro.mall.tiny.modules.mgs.service.MgsDepartmentsService;
 import com.macro.mall.tiny.modules.mgs.service.MgsInstitutionService;
 import org.springframework.stereotype.Service;
 
@@ -32,22 +29,8 @@ public class CommonServiceImpl implements CommonService {
 
     @Resource
     private MgsInstitutionService mgsInstitutionService;
-
     @Resource
     private ComPatientAdmissionService comPatientAdmissionService;
-
-    @Resource
-    private ComPatientTransferService comPatientTransferService;
-
-
-    @Resource
-    private ComPatientService comPatientService;
-
-    @Resource
-    private MgsDepartmentsService mgsDepartmentsService;
-
-
-
     @Override
     public String makePatientNum(String tableName) {
         String institutionNum = mgsInstitutionService.getInstitutionNum();

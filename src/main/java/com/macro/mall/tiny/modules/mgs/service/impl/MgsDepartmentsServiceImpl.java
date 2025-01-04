@@ -80,11 +80,10 @@ public class MgsDepartmentsServiceImpl extends ServiceImpl<MgsDepartmentsMapper,
     }
 
     public MgsDepartments getByNameStatus(String name, Integer status) {
-        QueryWrapper<MgsDepartments> wrapper = new QueryWrapper<>();
-        LambdaQueryWrapper<MgsDepartments> lambda = wrapper.lambda();
-        lambda.eq(MgsDepartments::getName, name)
+        LambdaQueryWrapper<MgsDepartments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MgsDepartments::getName, name)
                 .eq(MgsDepartments::getStatus, status);
-        return getOne(wrapper);
+        return getOne(queryWrapper);
     }
 
     @Override
@@ -97,7 +96,7 @@ public class MgsDepartmentsServiceImpl extends ServiceImpl<MgsDepartmentsMapper,
         List<BedCountOfRoomDTO> bedCountOfRoomList = new ArrayList<>();
         // 根据组室ID查询该组室是否可用
         MgsDepartments mgsDepartments = getById(departmentId);
-        if (mgsDepartments == null || mgsDepartments.getStatus() == CommonStatus.ACTIVE.getCode()) {
+        if (mgsDepartments == null || mgsDepartments.getStatus() != CommonStatus.ACTIVE.getCode()) {
             log.warn("组室不存在或状态不可用");
             return new ArrayList<>();
         }

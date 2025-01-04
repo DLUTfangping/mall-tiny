@@ -11,7 +11,7 @@ import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.common.enums.AdmissionStatusEnum;
 import com.macro.mall.tiny.common.enums.CurrentEnum;
 import com.macro.mall.tiny.common.enums.TransferStatusEnum;
-import com.macro.mall.tiny.modules.com.dto.TransferDTO;
+import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
 import com.macro.mall.tiny.modules.com.dto.TransferParam;
 import com.macro.mall.tiny.modules.com.dto.TransferQuery;
 import com.macro.mall.tiny.modules.com.mapper.ComPatientTransferMapper;
@@ -69,17 +69,21 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
     }
 
     @Override
-    public Page<TransferDTO> getRequestTransfers(Integer currentDepartmentId, String name,
-                                                                int page, int size) {
-        Page<TransferDTO> pageRequest = new Page<>(page, size);
-
+    public Page<ClassifyTransferDTO> getRequestTransfers(Integer currentDepartmentId, String name,
+                                                         Integer transferStatus, int page, int size) {
+        Page<ClassifyTransferDTO> pageRequest = new Page<>(page, size);
         TransferQuery tq = new TransferQuery();
         tq.setCurrentDepartmentId(currentDepartmentId);
         tq.setName(name);
-        tq.setTransferStatus(TransferStatusEnum.PENDING.getCode());
+        tq.setTransferStatus(transferStatus);
         tq.setCurrent(CurrentEnum.LATEST.getCode());
-
         return comPatientTransferMapper.getRequestTransfers(pageRequest, tq);
+    }
+
+    @Override
+    public Page<ClassifyTransferDTO> getTransferPatients(Integer currentDepartmentId, String name, int page, int size) {
+
+        return null;
     }
 
     @Override

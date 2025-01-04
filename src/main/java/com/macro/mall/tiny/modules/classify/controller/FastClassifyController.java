@@ -6,7 +6,7 @@ import com.macro.mall.tiny.common.api.CommonPage;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.modules.classify.dto.FastClassifyParam;
 import com.macro.mall.tiny.modules.classify.service.FastClassifyService;
-import com.macro.mall.tiny.modules.classify.vo.ClassifyPatientVO;
+import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,11 +37,11 @@ public class FastClassifyController {
     }
     @ApiOperation("根据查询条件分页获取病人列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public CommonResult<CommonPage<ClassifyPatientVO>> list(@RequestParam(value = "transferStatus", defaultValue = "1") Integer transferStatus,
+    public CommonResult<CommonPage<ClassifyTransferDTO>> list(@RequestParam(value = "transferStatus", defaultValue = "1") Integer transferStatus,
                                                             @RequestParam(value = "name", required = false) String name,
                                                             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                             @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<ClassifyPatientVO> result = fastClassifyService.list(transferStatus, name, pageSize, pageNum);
+        Page<ClassifyTransferDTO> result = fastClassifyService.list(transferStatus, name, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(result));
     }
 }

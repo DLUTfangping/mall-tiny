@@ -3,7 +3,7 @@ package com.macro.mall.tiny.modules.classify.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.modules.classify.dto.FastClassifyParam;
-import com.macro.mall.tiny.modules.classify.vo.ClassifyPatientVO;
+import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
 
 public interface FastClassifyService {
     /*
@@ -23,5 +23,5 @@ public interface FastClassifyService {
      * @param: [transferStatus 待接收 0 已驳回 2, name 病人姓名, pageSize, pageNum]
      * @return: com.macro.mall.tiny.common.api.CommonResult
      **/
-    Page<ClassifyPatientVO> list(Integer transferStatus, String name, Integer pageSize, Integer pageNum);
+    Page<ClassifyTransferDTO> list(Integer transferStatus, String name, Integer pageSize, Integer pageNum);
 }

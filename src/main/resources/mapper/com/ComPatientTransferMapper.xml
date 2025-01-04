@@ -22,7 +22,7 @@
         <result column="current" property="current" />
     </resultMap>
 
-    <select id="getRequestTransfers" resultType="com.macro.mall.tiny.modules.com.dto.TransferDTO"
+    <select id="getRequestTransfers" resultType="com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO"
             parameterType="com.macro.mall.tiny.modules.com.dto.TransferQuery">
         SELECT
             t.id AS transferId,
@@ -31,7 +31,8 @@
             t.transfer_time AS transferTime,
             t.to_department_id AS toDepartmentId,
             t.reject_reason AS rejectReason,
-            a.suggestion AS admissionSuggestion
+            a.suggestion AS suggestion,
+            a.data_original AS dataOriginal
         FROM
             com_patient_transfer t
                 JOIN
@@ -43,6 +44,18 @@
           AND p.name = #{name}
           AND t.transfer_status = #{transferStatus}
           AND t.current = #{current}
+        ORDER BY
+        <choose>
+            <when test="transferStatus == 0">
+                t.transfer_time DESC
+            </when>
+            <when test="transferStatus == 2">
+                t.reject_time DESC
+            </when>
+            <otherwise>
+                t.transfer_time DESC
+            </otherwise>
+        </choose>
     </select>
 
 </mapper>

@@ -7,8 +7,7 @@ import com.macro.mall.tiny.common.enums.*;
 import com.macro.mall.tiny.modules.classify.dto.FastClassifyParam;
 import com.macro.mall.tiny.modules.classify.service.ClassifyWristbandService;
 import com.macro.mall.tiny.modules.classify.service.FastClassifyService;
-import com.macro.mall.tiny.modules.classify.vo.ClassifyPatientVO;
-import com.macro.mall.tiny.modules.com.dto.TransferDTO;
+import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
 import com.macro.mall.tiny.modules.com.model.ComPatient;
 import com.macro.mall.tiny.modules.com.model.ComPatientAdmission;
 import com.macro.mall.tiny.modules.com.model.ComPatientTransfer;
@@ -24,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.macro.mall.tiny.common.comutil.CommonUtil.getTableName;
 
@@ -82,28 +79,12 @@ public class FastClassifyServiceImpl implements FastClassifyService {
         return CommonResult.success("分类成功");
     }
     @Override
-    public Page<ClassifyPatientVO> list(Integer transferStatus, String name, Integer pageSize, Integer pageNum) {
-        Page<ClassifyPatientVO> voPage = new Page<>();
+    public Page<ClassifyTransferDTO> list(Integer transferStatus, String name, Integer pageSize, Integer pageNum) {
+        Page<ClassifyTransferDTO> voPage = new Page<>();
+        Integer flDepartmentsId = getMgsDepartmentId();
+        if (flDepartmentsId == null) return voPage;
         // 查询当前已分类的病人列表（申请转组的病人列表）或者 查询当前已驳回的病人列表（申请转组被驳回的病人列表）
-        Page<TransferDTO> transfersPage = comPatientTransferService
-                        .getRequestTransfers(getMgsDepartmentId(), name, pageNum, pageSize);
-        MgsDepartments departments = mgsDepartmentsService.getById(getMgsDepartmentId());
-        // 构造Page<ClassifyPatientVO>
-        List<ClassifyPatientVO> vos = transfersPage.getRecords().stream().map(transfer -> {
-            ClassifyPatientVO vo = new ClassifyPatientVO();
-            vo.setSuggestion(transfer.getAdmissionSuggestion());
-            vo.setName(transfer.getPatientName());
-            vo.setDepartmentName(departments.getName());
-            vo.setTransferTime(transfer.getTransferTime());
-            vo.setDataOriginal("");
-            vo.setRejectReason(transfer.getRejectReason());
-            return vo;
-        }).collect(Collectors.toList());
-        voPage.setRecords(vos);
-        voPage.setCurrent(transfersPage.getCurrent());
-        voPage.setSize(transfersPage.getSize());
-        voPage.setTotal(transfersPage.getTotal());
-        voPage.setPages(transfersPage.getPages());
+        voPage = comPatientTransferService.getRequestTransfers(flDepartmentsId, name, transferStatus, pageNum, pageSize);
         return voPage;
     }
 
@@ -154,7 +135,9 @@ public class FastClassifyServiceImpl implements FastClassifyService {
     }
 
     private Integer getMgsDepartmentId() {
-        return mgsDepartmentsService.getByNameStatus(DepartmentCodeEnum.FL.getDescription(), CommonStatus.ACTIVE.getCode()).getId();
+        MgsDepartments flMgsDepartments = mgsDepartmentsService.getByNameStatus(DepartmentCodeEnum.FL.getDescription(), CommonStatus.ACTIVE.getCode());
+        if (flMgsDepartments == null) return null;
+        return flMgsDepartments.getId();
     }
 
 
