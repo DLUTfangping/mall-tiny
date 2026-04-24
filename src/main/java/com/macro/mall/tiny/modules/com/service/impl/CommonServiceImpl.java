@@ -55,7 +55,7 @@ public class CommonServiceImpl implements CommonService {
         LambdaQueryWrapper<ComPatientAdmission> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.ge(ComPatientAdmission::getCreatedAt, today + " 00:00:00")  // created_at 大于等于今天的起始时间
                 .lt(ComPatientAdmission::getCreatedAt, today + " 23:59:59")  // created_at 小于今天的结束时间
-                .orderByAsc(ComPatientAdmission::getId)  // 根据 id 升序排序
+                .orderByDesc(ComPatientAdmission::getId)  // 根据 id 降序排序
                 .last("LIMIT 1"); // 只查询最新的一条数据
 
         // 获取今天最后一条数据的住院编号

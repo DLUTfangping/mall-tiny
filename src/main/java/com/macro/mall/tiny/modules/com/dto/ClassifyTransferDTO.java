@@ -29,6 +29,7 @@ public class ClassifyTransferDTO {
     @ApiModelProperty("去往组室ID")
     private Integer toDepartmentId;
     @ApiModelProperty("去往组室名称")
+    @TableField(exist = false)
     private String toDepartmentName;
     @ApiModelProperty("处置建议")
     private String suggestion;

@@ -20,4 +20,9 @@ public class TransferQuery {
     private Integer transferStatus;
     // 是否是最新转移记录（0-否，1-是）
     private Integer current;
+
+    // 标识号
+    private String wristbandName;
+
+
 }

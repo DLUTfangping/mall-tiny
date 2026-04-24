@@ -35,14 +35,22 @@ public class FastClassifyController {
     public CommonResult immediateClassify(@Validated @RequestBody FastClassifyParam param) {
         return fastClassifyService.immediateClassify(param);
     }
-    @ApiOperation("根据查询条件分页获取病人列表")
+    /**
+     * @Description:
+     * @Author: Pikachu
+     * @date: 2025/1/4 10:22 PM
+     * @param: [transferStatus 0 待接收 2 已驳回, name 病人姓名, pageSize, pageNum]
+     * @return: com.macro.mall.tiny.common.api.CommonResult<com.macro.mall.tiny.common.api.CommonPage<com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO>>
+     **/
+    @ApiOperation("根据查询条件分页获取已分类或驳回病人列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public CommonResult<CommonPage<ClassifyTransferDTO>> list(@RequestParam(value = "transferStatus", defaultValue = "1") Integer transferStatus,
+    public CommonResult<CommonPage<ClassifyTransferDTO>> list(@RequestParam(value = "transferStatus", defaultValue = "0") Integer transferStatus,
                                                             @RequestParam(value = "name", required = false) String name,
                                                             @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                             @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         Page<ClassifyTransferDTO> result = fastClassifyService.list(transferStatus, name, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(result));
     }
+
 }
 

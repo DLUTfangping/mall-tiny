@@ -12,6 +12,7 @@ import com.macro.mall.tiny.common.enums.AdmissionStatusEnum;
 import com.macro.mall.tiny.common.enums.CurrentEnum;
 import com.macro.mall.tiny.common.enums.TransferStatusEnum;
 import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
+import com.macro.mall.tiny.modules.com.dto.PendingPatientsDTO;
 import com.macro.mall.tiny.modules.com.dto.TransferParam;
 import com.macro.mall.tiny.modules.com.dto.TransferQuery;
 import com.macro.mall.tiny.modules.com.mapper.ComPatientTransferMapper;
@@ -43,6 +44,7 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
 
     @Resource
     private ComPatientAdmissionService comPatientAdmissionService;
+
     @Override
     public Map<Integer, ComPatientTransfer> getPatientMap(Integer transferStatus, Integer departmentId) {
         Map<Integer, ComPatientTransfer> retMap = new HashMap<>();
@@ -69,7 +71,7 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
     }
 
     @Override
-    public Page<ClassifyTransferDTO> getRequestTransfers(Integer currentDepartmentId, String name,
+    public Page<ClassifyTransferDTO> getTransfersOrRejectedPatients(Integer currentDepartmentId, String name,
                                                          Integer transferStatus, int page, int size) {
         Page<ClassifyTransferDTO> pageRequest = new Page<>(page, size);
         TransferQuery tq = new TransferQuery();
@@ -77,13 +79,13 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
         tq.setName(name);
         tq.setTransferStatus(transferStatus);
         tq.setCurrent(CurrentEnum.LATEST.getCode());
-        return comPatientTransferMapper.getRequestTransfers(pageRequest, tq);
+        return comPatientTransferMapper.getTransfersOrRejectedPatients(pageRequest, tq);
     }
 
     @Override
-    public Page<ClassifyTransferDTO> getTransferPatients(Integer currentDepartmentId, String name, int page, int size) {
-
-        return null;
+    public Page<PendingPatientsDTO> getPendingPatients(TransferQuery transferQuery, int page, int size) {
+        Page<PendingPatientsDTO> pageRequest = new Page<>(page, size);
+        return comPatientTransferMapper.getPendingPatients(pageRequest, transferQuery);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
                 .eq(ComPatientTransfer::getPatientId, param.getPatientId());
         updateTransferWrapper.set(ComPatientTransfer::getTransferStatus, TransferStatusEnum.RECEIVED.getCode());
         updateTransferWrapper.set(ComPatientTransfer::getReceiveTime, DateUtil.date());
-        if (!update(updateTransferWrapper)) return CommonResult.failed();
+        if (!update(updateTransferWrapper)) return CommonResult.failed("接收失败");
 
         // 更新病人住院表(com_patient_admission)  TODO 更新病房ID和并床位号
         LambdaUpdateWrapper<ComPatientAdmission> updateAdmissionWrapper = Wrappers.lambdaUpdate();
@@ -116,7 +118,47 @@ public class ComPatientTransferServiceImpl extends ServiceImpl<ComPatientTransfe
                 .eq(ComPatientTransfer::getPatientId, param.getPatientId());
         updateTransferWrapper.set(ComPatientTransfer::getTransferStatus, TransferStatusEnum.REJECTED.getCode());
         updateTransferWrapper.set(ComPatientTransfer::getRejectTime, DateUtil.date());
-        if (!update(updateTransferWrapper)) return CommonResult.failed();
+        updateTransferWrapper.set(ComPatientTransfer::getRejectReason, param.getRejectReason());
+        if (!update(updateTransferWrapper)) return CommonResult.failed("驳回失败，请刷新重试");
         return CommonResult.success(null);
+    }
+
+    @Override
+    public CommonResult patientTransfer(TransferParam param) {
+        // 1.验证病人当前是否在院并获取当前组室信息
+        LambdaQueryWrapper<ComPatientAdmission> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(ComPatientAdmission::getPatientId, param.getPatientId())
+                .eq(ComPatientAdmission::getStatus, AdmissionStatusEnum.INHOSPITAL.getCode());
+        ComPatientAdmission comPatientAdmission = comPatientAdmissionService.getOne(queryWrapper, true);
+        if (comPatientAdmission == null) {
+            return CommonResult.failed("病人当前不在住院状态");
+        }
+        // 2.更新之前的转组记录的 current 状态为 0
+        LambdaUpdateWrapper<ComPatientTransfer> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.eq(ComPatientTransfer::getPatientId, param.getPatientId())
+                .set(ComPatientTransfer::getCurrent, CurrentEnum.NOT_LATEST.getCode());
+        boolean update = update(updateWrapper);
+        if (!update) {
+            return CommonResult.failed("更新转组记录失败");
+        }
+        // 3.新增转组记录
+        ComPatientTransfer comPatientTransfer = buildComPatientTransfer(param, comPatientAdmission);
+        boolean save = save(comPatientTransfer);
+        if (!save) {
+            return CommonResult.failed("新增转组记录失败");
+        }
+        return CommonResult.success(null);
+    }
+
+    private ComPatientTransfer buildComPatientTransfer(TransferParam param, ComPatientAdmission comPatientAdmission) {
+        ComPatientTransfer comPatientTransfer = new ComPatientTransfer();
+        comPatientTransfer.setPatientId(comPatientAdmission.getPatientId());
+        comPatientTransfer.setFromDepartmentId(comPatientAdmission.getDepartmentId());
+        comPatientTransfer.setToDepartmentId(param.getDepartmentId());
+        comPatientTransfer.setToRoomId(param.getRoomId());
+        comPatientTransfer.setTransferTime(DateUtil.date());
+        comPatientTransfer.setTransferStatus(TransferStatusEnum.PENDING.getCode());
+        comPatientTransfer.setCurrent(CurrentEnum.LATEST.getCode());
+        return comPatientTransfer;
     }
 }

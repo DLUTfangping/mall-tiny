@@ -42,5 +42,11 @@ public class ComPatientTransferController {
     public CommonResult patientReject(@Validated @RequestBody TransferParam param) {
         return comPatientTransferService.patientReject(param);
     }
+
+    @ApiOperation("病人申请转组")
+    @RequestMapping(value = "/transfer", method = RequestMethod.POST)
+    public CommonResult patientTransfer(@Validated @RequestBody TransferParam param) {
+        return comPatientTransferService.patientTransfer(param);
+    }
 }
 

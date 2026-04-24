@@ -88,7 +88,13 @@ public class MgsDepartmentsServiceImpl extends ServiceImpl<MgsDepartmentsMapper,
 
     @Override
     public boolean checkDepartment(Integer departmentId) {
-        return getById(departmentId) != null;
+        LambdaQueryWrapper<MgsDepartments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MgsDepartments::getId, departmentId)
+                .eq(MgsDepartments::getStatus, CommonStatus.ACTIVE.getCode());
+        if (count(queryWrapper) > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -107,6 +113,7 @@ public class MgsDepartmentsServiceImpl extends ServiceImpl<MgsDepartmentsMapper,
         List<MgsRooms> roomList = mgsRoomsService.list(queryRoomWrapper);
         if (CollUtil.isEmpty(roomList)) {
             log.info("组室中病房数量为空");
+            return new ArrayList<>();
         }
         List<Integer> roomIds = roomList.stream().map(MgsRooms::getId).collect(Collectors.toList());
         // 在病房中查找剩余的病床数状态为有效（未删除）的，且没有被占用的

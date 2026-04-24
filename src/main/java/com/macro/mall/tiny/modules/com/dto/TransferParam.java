@@ -16,5 +16,8 @@ public class TransferParam {
     private Integer patientId;
     // 组室id
     private Integer departmentId;
-
+    // 房间id
+    private Integer roomId;
+    // 驳回原因
+    private String rejectReason;
 }

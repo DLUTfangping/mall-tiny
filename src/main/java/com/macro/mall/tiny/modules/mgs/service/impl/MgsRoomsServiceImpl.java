@@ -86,7 +86,13 @@ public class MgsRoomsServiceImpl extends ServiceImpl<MgsRoomsMapper, MgsRooms> i
 
     @Override
     public boolean checkRoom(Integer roomId) {
-        return getById(roomId) != null;
+        LambdaQueryWrapper<MgsRooms> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MgsRooms::getId, roomId)
+                .eq(MgsRooms::getStatus, CommonStatus.ACTIVE.getCode());
+        if (count(queryWrapper) > 0) {
+            return true;
+        }
+        return false;
     }
 
 

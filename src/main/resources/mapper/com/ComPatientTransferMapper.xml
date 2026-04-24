@@ -22,14 +22,14 @@
         <result column="current" property="current" />
     </resultMap>
 
-    <select id="getRequestTransfers" resultType="com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO"
-            parameterType="com.macro.mall.tiny.modules.com.dto.TransferQuery">
+    <select id="getTransfersOrRejectedPatients" resultType="com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO">
         SELECT
             t.id AS transferId,
             p.id AS patientId,
             p.name AS patientName,
             t.transfer_time AS transferTime,
             t.to_department_id AS toDepartmentId,
+            d.name AS toDepartmentName,
             t.reject_reason AS rejectReason,
             a.suggestion AS suggestion,
             a.data_original AS dataOriginal
@@ -37,19 +37,30 @@
             com_patient_transfer t
                 JOIN
             com_patient p ON t.patient_id = p.id
+                JOIN
+            mgs_departments d ON t.to_department_id = d.id
                 LEFT JOIN
             com_patient_admission a ON t.patient_id = a.patient_id
-        WHERE
-            t.from_department_id = #{currentDepartmentId}
-          AND p.name = #{name}
-          AND t.transfer_status = #{transferStatus}
-          AND t.current = #{current}
+        <where>
+            <if test="transferQuery.currentDepartmentId != null">
+                t.from_department_id = #{transferQuery.currentDepartmentId}
+            </if>
+            <if test="transferQuery.name != null and transferQuery.name != ''">
+                AND p.name = #{transferQuery.name}
+            </if>
+            <if test="transferQuery.transferStatus != null">
+                AND t.transfer_status = #{transferQuery.transferStatus}
+            </if>
+            <if test="transferQuery.current != null">
+                AND t.current = #{transferQuery.current}
+            </if>
+        </where>
         ORDER BY
         <choose>
-            <when test="transferStatus == 0">
+            <when test="transferQuery.transferStatus == 0">
                 t.transfer_time DESC
             </when>
-            <when test="transferStatus == 2">
+            <when test="transferQuery.transferStatus == 2">
                 t.reject_time DESC
             </when>
             <otherwise>
@@ -57,5 +68,43 @@
             </otherwise>
         </choose>
     </select>
-
+    
+    <select id="getPendingPatients" resultType="com.macro.mall.tiny.modules.com.dto.PendingPatientsDTO"
+            parameterType="com.macro.mall.tiny.modules.com.dto.TransferQuery">
+        SELECT
+            t.id AS transfer_id,
+            t.from_department_id AS fromDepartmentId,
+            p.id AS patient_id,
+            p.name AS patient_name,
+            p.signage AS signage,
+            a.wristband_name AS wristbandName,
+            p.gender AS gender,
+            p.birth_date AS birth_date,
+            t.transfer_time AS transferTime,
+        FROM
+            com_patient_transfer t
+                JOIN
+            com_patient p ON t.patient_id = p.id
+                LEFT JOIN
+            com_patient_admission a ON t.patient_id = a.patient_id
+        <where>
+            <if test="currentDepartmentId != null">
+                t.to_department_id = #{currentDepartmentId}
+            </if>
+            <if test="name != null and name != ''">
+                AND p.name = #{name}
+            </if>
+            <if test="transferStatus != null">
+                AND t.transfer_status = #{transferStatus}
+            </if>
+            <if test="current != null">
+                AND t.current = #{current}
+            </if>
+            <if test="wristbandName != null and wristbandName != ''">
+                AND a.wristbandName = #{wristbandName}
+            </if>
+        </where>
+        ORDER BY
+            t.transfer_time DESC;
+    </select>
 </mapper>

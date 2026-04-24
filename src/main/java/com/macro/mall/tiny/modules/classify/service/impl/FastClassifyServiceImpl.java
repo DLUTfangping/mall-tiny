@@ -1,10 +1,13 @@
 package com.macro.mall.tiny.modules.classify.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macro.mall.tiny.common.api.CommonResult;
 import com.macro.mall.tiny.common.enums.*;
 import com.macro.mall.tiny.modules.classify.dto.FastClassifyParam;
+import com.macro.mall.tiny.modules.classify.model.ClassifyWristband;
 import com.macro.mall.tiny.modules.classify.service.ClassifyWristbandService;
 import com.macro.mall.tiny.modules.classify.service.FastClassifyService;
 import com.macro.mall.tiny.modules.com.dto.ClassifyTransferDTO;
@@ -55,7 +58,7 @@ public class FastClassifyServiceImpl implements FastClassifyService {
     public CommonResult immediateClassify(FastClassifyParam param) {
         // 查看标识号是否存在
         String wristbandName = param.getWristbandName();
-        if (!classifyWristbandService.checkWristband(wristbandName)) return CommonResult.failed("标识号不存在");
+        if (!classifyWristbandService.checkWristband(wristbandName)) return CommonResult.failed("标识号已被绑定或无效");
         // 查看去向组室是否存在
         Integer toDepartmentId = param.getToDepartmentId();
         if (!mgsDepartmentsService.checkDepartment(toDepartmentId)) return CommonResult.failed("组室不存在");
@@ -71,11 +74,17 @@ public class FastClassifyServiceImpl implements FastClassifyService {
         ComPatientTransfer comPatientTransfer = buildComPatientTransfer(toDepartmentId, toRoomId,
                 param.getClassifyTime(), comPatient.getId());
         comPatientTransferService.save(comPatientTransfer);
-        // 更新该病人其他记录中的current字段的值为0
 
         // 3.新增人员住院信息
         ComPatientAdmission comPatientAdmission = buildComPatientAdmission(param, comPatient.getId());
         comPatientAdmissionService.save(comPatientAdmission);
+
+        // 4.更新标识号表
+        LambdaUpdateWrapper<ClassifyWristband> updateWrapper = Wrappers.lambdaUpdate();
+        updateWrapper.eq(ClassifyWristband::getName, wristbandName)
+                .set(ClassifyWristband::getBounded, BoundedEnum.BOUND.getCode())
+                .set(ClassifyWristband::getBoundPersonNum, comPatient.getPatientNum());
+        classifyWristbandService.update(updateWrapper);
         return CommonResult.success("分类成功");
     }
     @Override
@@ -84,9 +93,11 @@ public class FastClassifyServiceImpl implements FastClassifyService {
         Integer flDepartmentsId = getMgsDepartmentId();
         if (flDepartmentsId == null) return voPage;
         // 查询当前已分类的病人列表（申请转组的病人列表）或者 查询当前已驳回的病人列表（申请转组被驳回的病人列表）
-        voPage = comPatientTransferService.getRequestTransfers(flDepartmentsId, name, transferStatus, pageNum, pageSize);
+        voPage = comPatientTransferService.getTransfersOrRejectedPatients(flDepartmentsId, name, transferStatus, pageNum, pageSize);
         return voPage;
     }
+
+
 
     private ComPatient buildComPatient(FastClassifyParam param) {
         ComPatient comPatient = new ComPatient();
@@ -118,10 +129,10 @@ public class FastClassifyServiceImpl implements FastClassifyService {
         // 设置住院号
         comPatientAdmission.setHospitalNum(buildHospitalNum());
         comPatientAdmission.setWristbandName(param.getWristbandName());
+        // 分类只有组室，并没有床位
         comPatientAdmission.setDepartmentId(getMgsDepartmentId());
         comPatientAdmission.setAdmissionDate(param.getClassifyTime());
         comPatientAdmission.setSuggestion(param.getSuggestion());
-        comPatientAdmission.setStatus(AdmissionStatusEnum.TRANSFERRING.getCode());
         return comPatientAdmission;
     }
 
@@ -139,6 +150,4 @@ public class FastClassifyServiceImpl implements FastClassifyService {
         if (flMgsDepartments == null) return null;
         return flMgsDepartments.getId();
     }
-
-
 }

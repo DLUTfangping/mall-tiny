@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.macro.mall.tiny.common.enums.BoundedEnum;
+import com.macro.mall.tiny.common.enums.CommonStatus;
 import com.macro.mall.tiny.modules.classify.mapper.ClassifyWristbandMapper;
 import com.macro.mall.tiny.modules.classify.model.ClassifyWristband;
 import com.macro.mall.tiny.modules.classify.service.ClassifyWristbandService;
@@ -47,7 +49,12 @@ public class ClassifyWristbandServiceImpl extends ServiceImpl<ClassifyWristbandM
     @Override
     public boolean checkWristband(String wristbandName) {
         LambdaQueryWrapper<ClassifyWristband> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ClassifyWristband::getName, wristbandName);
-        return count(queryWrapper) > 0;
+        queryWrapper.eq(ClassifyWristband::getName, wristbandName)
+                .eq(ClassifyWristband::getStatus, CommonStatus.ACTIVE.getCode())
+                .eq(ClassifyWristband::getBounded, BoundedEnum.UNBOUND.getCode());
+        if (count(queryWrapper) > 0) {
+            return true;
+        }
+        return false;
     }
 }
