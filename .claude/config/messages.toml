@@ -1,0 +1,92 @@
+# Messages Configuration
+# Customize all user-facing messages displayed by hooks and scripts
+# Set *_enabled = false to disable specific messages
+
+# =============================================================================
+# Code Quality Messages
+# =============================================================================
+
+[quality]
+# TDD reminder when writing code without tests
+tdd_reminder = "Warning: No test file found. Consider TDD - write tests first!"
+tdd_reminder_enabled = true
+
+# Reminder before git push
+push_quality = "Quality check: Ensure tests pass before pushing."
+push_quality_enabled = true
+
+# Warning when deployment is requested
+deploy_gate = "Deployment requested - ensure all quality gates pass."
+deploy_gate_enabled = true
+
+# General test reminder
+test_reminder = "Remember to test your changes!"
+test_reminder_enabled = true
+
+# =============================================================================
+# File Operation Messages
+# =============================================================================
+
+[files]
+# Notification when a file is written
+# Use %s as placeholder for file path
+file_written = "File written: %s"
+file_written_enabled = true
+
+# =============================================================================
+# Productivity Reminders
+# =============================================================================
+
+[reminders]
+# Auto-save reminder message
+auto_save = "Auto-save reminder: Your work is being saved automatically"
+auto_save_enabled = true
+auto_save_interval = "30 minutes"
+
+# Git commit reminder
+commit_reminder = "Remember to commit your work!"
+commit_reminder_enabled = true
+commit_reminder_interval = "2 hours"
+
+# Backup reminder for writing projects
+backup_reminder = "Remember to backup your writing to cloud storage!"
+backup_reminder_enabled = true
+backup_reminder_time = "17:00"
+backup_reminder_days = ["monday", "wednesday", "friday"]
+
+# Break reminder for health
+break_reminder = "Time for a 5-minute break! Stretch and rest your eyes."
+break_reminder_enabled = false
+break_reminder_interval = "1 hour"
+
+# =============================================================================
+# Writing Project Messages
+# =============================================================================
+
+[writing]
+# Word count message (use %d for count)
+word_count = "Total word count: %d words"
+word_count_enabled = true
+
+# Session start message (use %s for time)
+session_start = "Writing session started at %s"
+session_start_enabled = true
+
+# Session duration message (use %d for minutes)
+session_duration = "Writing session duration: %d minutes"
+session_duration_enabled = true
+
+# =============================================================================
+# Hook Footer Messages
+# =============================================================================
+
+[hooks]
+# Footer added to automated issue updates
+auto_update_footer = "_Automated update via hook_"
+
+# Commit notification format
+commit_header = "**Commit:**"
+push_header = "**Branch pushed:**"
+pr_header = "**Pull Request Created:**"
+test_header = "Test Results"
+deploy_header = "Deployment Complete"

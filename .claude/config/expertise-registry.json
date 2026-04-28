@@ -1,0 +1,246 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Expertise registry for agent capabilities",
+  "version": "1.0.0",
+
+  "categories": {
+    "engineering": {
+      "title": "Engineering",
+      "description": "Software development expertise",
+      "roles": ["senior-frontend-engineer", "senior-backend-engineer", "terminal-app-developer"]
+    },
+    "product": {
+      "title": "Product",
+      "description": "Product management and strategy",
+      "roles": ["product-manager"]
+    },
+    "architecture": {
+      "title": "Architecture",
+      "description": "System design and architecture",
+      "roles": ["solution-architect"]
+    },
+    "quality": {
+      "title": "Quality",
+      "description": "Testing and quality assurance",
+      "roles": ["qa-engineer"]
+    },
+    "operations": {
+      "title": "Operations",
+      "description": "DevOps and infrastructure",
+      "roles": ["devops-engineer"]
+    },
+    "specialized": {
+      "title": "Specialized",
+      "description": "Domain-specific expertise",
+      "roles": []
+    }
+  },
+
+  "experience_levels": [
+    {
+      "id": "junior",
+      "label": "Junior (3-5 years)",
+      "years": "3-5",
+      "description": "Solid fundamentals, learning patterns",
+      "autonomy": "medium",
+      "mentoring": false
+    },
+    {
+      "id": "senior",
+      "label": "Senior (10+ years)",
+      "years": "10+",
+      "description": "Deep expertise, best practices",
+      "autonomy": "high",
+      "mentoring": true
+    },
+    {
+      "id": "principal",
+      "label": "Staff/Principal (15+ years)",
+      "years": "15+",
+      "description": "Industry leader, architecture",
+      "autonomy": "full",
+      "mentoring": true
+    }
+  ],
+
+  "domains": {
+    "languages": {
+      "title": "Programming Languages",
+      "items": [
+        {"id": "javascript", "label": "JavaScript/TypeScript", "icon": "JS"},
+        {"id": "python", "label": "Python", "icon": "PY"},
+        {"id": "go", "label": "Go", "icon": "GO"},
+        {"id": "rust", "label": "Rust", "icon": "RS"},
+        {"id": "java", "label": "Java/Kotlin", "icon": "JV"},
+        {"id": "csharp", "label": "C#", "icon": "CS"},
+        {"id": "swift", "label": "Swift", "icon": "SW"},
+        {"id": "ruby", "label": "Ruby", "icon": "RB"},
+        {"id": "php", "label": "PHP", "icon": "PHP"},
+        {"id": "cpp", "label": "C/C++", "icon": "C++"}
+      ]
+    },
+
+    "frontend": {
+      "title": "Frontend Frameworks",
+      "items": [
+        {"id": "react", "label": "React/React Native", "language": "javascript"},
+        {"id": "vue", "label": "Vue.js", "language": "javascript"},
+        {"id": "angular", "label": "Angular", "language": "typescript"},
+        {"id": "svelte", "label": "Svelte/SvelteKit", "language": "javascript"},
+        {"id": "nextjs", "label": "Next.js", "language": "javascript"},
+        {"id": "remix", "label": "Remix", "language": "javascript"},
+        {"id": "astro", "label": "Astro", "language": "javascript"},
+        {"id": "solid", "label": "SolidJS", "language": "javascript"}
+      ]
+    },
+
+    "backend": {
+      "title": "Backend Frameworks",
+      "items": [
+        {"id": "express", "label": "Express.js", "language": "javascript"},
+        {"id": "nestjs", "label": "NestJS", "language": "typescript"},
+        {"id": "fastify", "label": "Fastify", "language": "javascript"},
+        {"id": "django", "label": "Django", "language": "python"},
+        {"id": "fastapi", "label": "FastAPI", "language": "python"},
+        {"id": "flask", "label": "Flask", "language": "python"},
+        {"id": "gin", "label": "Gin", "language": "go"},
+        {"id": "echo", "label": "Echo", "language": "go"},
+        {"id": "actix", "label": "Actix", "language": "rust"},
+        {"id": "axum", "label": "Axum", "language": "rust"},
+        {"id": "rails", "label": "Ruby on Rails", "language": "ruby"},
+        {"id": "spring", "label": "Spring Boot", "language": "java"}
+      ]
+    },
+
+    "databases": {
+      "title": "Databases",
+      "items": [
+        {"id": "postgresql", "label": "PostgreSQL", "type": "sql"},
+        {"id": "mysql", "label": "MySQL/MariaDB", "type": "sql"},
+        {"id": "sqlite", "label": "SQLite", "type": "sql"},
+        {"id": "mongodb", "label": "MongoDB", "type": "nosql"},
+        {"id": "redis", "label": "Redis", "type": "cache"},
+        {"id": "elasticsearch", "label": "Elasticsearch", "type": "search"},
+        {"id": "dynamodb", "label": "DynamoDB", "type": "nosql"},
+        {"id": "cassandra", "label": "Cassandra", "type": "nosql"}
+      ]
+    },
+
+    "infrastructure": {
+      "title": "Infrastructure & DevOps",
+      "items": [
+        {"id": "docker", "label": "Docker", "category": "containers"},
+        {"id": "kubernetes", "label": "Kubernetes", "category": "orchestration"},
+        {"id": "terraform", "label": "Terraform", "category": "iac"},
+        {"id": "aws", "label": "AWS", "category": "cloud"},
+        {"id": "gcp", "label": "Google Cloud", "category": "cloud"},
+        {"id": "azure", "label": "Azure", "category": "cloud"},
+        {"id": "github-actions", "label": "GitHub Actions", "category": "ci-cd"},
+        {"id": "jenkins", "label": "Jenkins", "category": "ci-cd"},
+        {"id": "nginx", "label": "Nginx", "category": "web-server"},
+        {"id": "prometheus", "label": "Prometheus/Grafana", "category": "monitoring"}
+      ]
+    },
+
+    "architecture_patterns": {
+      "title": "Architecture Patterns",
+      "items": [
+        {"id": "microservices", "label": "Microservices"},
+        {"id": "event-driven", "label": "Event-Driven Architecture"},
+        {"id": "cqrs", "label": "CQRS/Event Sourcing"},
+        {"id": "ddd", "label": "Domain-Driven Design"},
+        {"id": "clean-arch", "label": "Clean Architecture"},
+        {"id": "serverless", "label": "Serverless"},
+        {"id": "api-first", "label": "API-First Design"},
+        {"id": "twelve-factor", "label": "Twelve-Factor App"}
+      ]
+    },
+
+    "soft_skills": {
+      "title": "Soft Skills & Methodologies",
+      "items": [
+        {"id": "code-review", "label": "Code Review"},
+        {"id": "agile", "label": "Agile/Scrum"},
+        {"id": "tdd", "label": "Test-Driven Development"},
+        {"id": "pair-programming", "label": "Pair Programming"},
+        {"id": "mentoring", "label": "Mentoring"},
+        {"id": "documentation", "label": "Technical Documentation"},
+        {"id": "communication", "label": "Technical Communication"},
+        {"id": "estimation", "label": "Estimation & Planning"}
+      ]
+    }
+  },
+
+  "tools": {
+    "available": [
+      {
+        "id": "Read",
+        "description": "Read files from the filesystem",
+        "category": "file-operations"
+      },
+      {
+        "id": "Write",
+        "description": "Write files to the filesystem",
+        "category": "file-operations"
+      },
+      {
+        "id": "Edit",
+        "description": "Edit existing files",
+        "category": "file-operations"
+      },
+      {
+        "id": "MultiEdit",
+        "description": "Make multiple edits to a file",
+        "category": "file-operations"
+      },
+      {
+        "id": "Bash",
+        "description": "Execute shell commands",
+        "category": "system"
+      },
+      {
+        "id": "Grep",
+        "description": "Search file contents",
+        "category": "search"
+      },
+      {
+        "id": "Glob",
+        "description": "Find files by pattern",
+        "category": "search"
+      },
+      {
+        "id": "Task",
+        "description": "Delegate to other agents",
+        "category": "orchestration"
+      },
+      {
+        "id": "WebSearch",
+        "description": "Search the web",
+        "category": "research"
+      },
+      {
+        "id": "WebFetch",
+        "description": "Fetch web content",
+        "category": "research"
+      }
+    ],
+    "role_defaults": {
+      "engineering": ["Read", "Write", "Edit", "MultiEdit", "Bash", "Grep", "Glob", "Task"],
+      "product": ["Read", "Write", "Task", "WebSearch", "WebFetch"],
+      "architecture": ["Read", "Write", "MultiEdit", "Grep", "WebSearch", "Task"],
+      "quality": ["Read", "Write", "Bash", "Grep", "Task"],
+      "operations": ["Read", "Write", "Bash", "Grep", "Task"]
+    }
+  },
+
+  "agent_colors": [
+    {"id": "blue", "label": "Blue (Default)", "hex": "#3B82F6", "ansi": "34"},
+    {"id": "green", "label": "Green", "hex": "#22C55E", "ansi": "32"},
+    {"id": "purple", "label": "Purple", "hex": "#A855F7", "ansi": "35"},
+    {"id": "orange", "label": "Orange", "hex": "#F97316", "ansi": "33"},
+    {"id": "red", "label": "Red", "hex": "#EF4444", "ansi": "31"},
+    {"id": "cyan", "label": "Cyan", "hex": "#06B6D4", "ansi": "36"},
+    {"id": "yellow", "label": "Yellow", "hex": "#EAB308", "ansi": "93"},
+    {"id": "pink", "label": "Pink", "hex": "#EC4899", "ansi": "95"}
+  ]
+}

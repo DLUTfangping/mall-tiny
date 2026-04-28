@@ -1,0 +1,121 @@
+# Labels Configuration
+# Maps development stages to issue tracker labels
+# Customize for your GitHub, Linear, Jira, or other issue tracker
+
+# =============================================================================
+# Stage to Label Mapping
+# =============================================================================
+
+[stages]
+# Development lifecycle stages
+planning = "planning"
+pm_complete = "pm-complete"
+architecture_complete = "architecture-complete"
+design_complete = "design-complete"
+in_development = "in-development"
+in_review = "in-review"
+qa_complete = "qa-complete"
+deployed = "deployed"
+closed = "closed"
+
+# =============================================================================
+# Priority Labels
+# =============================================================================
+
+[priority]
+high = "priority: high"
+medium = "priority: medium"
+low = "priority: low"
+critical = "priority: critical"
+
+# =============================================================================
+# Type Labels
+# =============================================================================
+
+[type]
+feature = "type: feature"
+enhancement = "type: enhancement"
+bug = "type: bug"
+refactor = "type: refactor"
+documentation = "type: docs"
+chore = "type: chore"
+security = "type: security"
+
+# =============================================================================
+# Status Labels
+# =============================================================================
+
+[status]
+blocked = "status: blocked"
+needs_review = "status: needs-review"
+wip = "status: wip"
+on_hold = "status: on-hold"
+ready = "status: ready"
+
+# =============================================================================
+# Agent Assignment Labels
+# =============================================================================
+
+[agents]
+frontend = "agent: frontend"
+backend = "agent: backend"
+devops = "agent: devops"
+qa = "agent: qa"
+architect = "agent: architect"
+
+# =============================================================================
+# Platform-Specific Overrides
+# =============================================================================
+
+# GitHub-specific labels (default)
+[github]
+use_colors = true
+label_prefix = ""
+# Color codes for GitHub labels (hex without #)
+colors.planning = "0052CC"
+colors.in_development = "5319E7"
+colors.in_review = "FBCA04"
+colors.deployed = "0E8A16"
+colors.bug = "D73A4A"
+colors.feature = "A2EEEF"
+
+# Linear-specific labels
+[linear]
+use_states = true  # Linear uses states instead of labels
+state_mapping.planning = "Backlog"
+state_mapping.in_development = "In Progress"
+state_mapping.in_review = "In Review"
+state_mapping.deployed = "Done"
+
+# Jira-specific labels
+[jira]
+use_status = true  # Jira uses status transitions
+status_mapping.planning = "To Do"
+status_mapping.in_development = "In Progress"
+status_mapping.in_review = "Code Review"
+status_mapping.qa_complete = "QA"
+status_mapping.deployed = "Done"
+# Jira issue types
+issue_types.feature = "Story"
+issue_types.bug = "Bug"
+issue_types.enhancement = "Task"
+
+# =============================================================================
+# Custom Labels (add your own)
+# =============================================================================
+
+[custom]
+# Add custom labels here
+# example = "my-custom-label"
+
+# =============================================================================
+# Label Cleanup Rules
+# =============================================================================
+
+[cleanup]
+# Labels to remove when transitioning to a new stage
+on_development = ["planning", "pm-complete"]
+on_review = ["in-development"]
+on_qa = ["in-review"]
+on_deploy = ["qa-complete"]
+on_close = ["deployed"]

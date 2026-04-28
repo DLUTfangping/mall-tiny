@@ -1,0 +1,259 @@
+# UI Theme Configuration
+# Customize icons, colors, and formats for all UI scripts
+# Used by: banner.sh, status.sh, question.sh, table.sh, tree.sh, progress.sh
+
+# =============================================================================
+# Status Icons
+# =============================================================================
+
+[icons]
+# Status indicators
+success = "\u2713"       # checkmark
+error = "\u2717"         # X mark
+warning = "\u26A0"       # warning triangle
+info = "\u2139"          # info circle
+loading = "\u2807"       # spinner dot pattern
+pending = "\u25CB"       # empty circle
+complete = "\u25CF"      # filled circle
+current = "\u25B6"       # play arrow
+
+# Navigation
+arrow_right = "\u25B8"   # right arrow
+arrow_down = "\u25BE"    # down arrow
+bullet = "\u2022"        # bullet point
+
+# Decorative
+star = "\u2605"          # star
+sparkle = "\u2728"       # sparkles
+
+# Questions
+question = "\u2753"      # question mark
+
+# File types
+folder = "\uD83D\uDCC1"  # folder emoji
+file = "\uD83D\uDCC4"    # file emoji
+
+# Workflow states
+workflow_current = "\u25B6"   # current step indicator
+workflow_pending = "\u25CB"   # pending step
+workflow_complete = "\u2713"  # completed step
+
+# =============================================================================
+# Color Palette (ANSI escape codes)
+# =============================================================================
+
+[colors]
+# Primary palette
+primary = "\033[0;36m"      # cyan
+secondary = "\033[0;35m"    # purple
+highlight = "\033[1;37m"    # bold white
+muted = "\033[0;90m"        # gray
+
+# Status colors
+success = "\033[0;32m"      # green
+error = "\033[0;31m"        # red
+warning = "\033[1;33m"      # yellow
+info = "\033[0;34m"         # blue
+
+# Reset
+reset = "\033[0m"
+
+# Basic colors (for reference in scripts)
+black = "\033[0;30m"
+red = "\033[0;31m"
+green = "\033[0;32m"
+yellow = "\033[0;33m"
+blue = "\033[0;34m"
+purple = "\033[0;35m"
+cyan = "\033[0;36m"
+white = "\033[0;37m"
+
+# Bold variants
+bold_black = "\033[1;30m"
+bold_red = "\033[1;31m"
+bold_green = "\033[1;32m"
+bold_yellow = "\033[1;33m"
+bold_blue = "\033[1;34m"
+bold_purple = "\033[1;35m"
+bold_cyan = "\033[1;36m"
+bold_white = "\033[1;37m"
+
+# =============================================================================
+# Box Drawing Characters
+# =============================================================================
+
+[box]
+# Light box drawing
+light_horizontal = "\u2500"
+light_vertical = "\u2502"
+light_top_left = "\u250C"
+light_top_right = "\u2510"
+light_bottom_left = "\u2514"
+light_bottom_right = "\u2518"
+
+# Rounded corners
+rounded_top_left = "\u256D"
+rounded_top_right = "\u256E"
+rounded_bottom_left = "\u2570"
+rounded_bottom_right = "\u256F"
+
+# Heavy box drawing
+heavy_horizontal = "\u2501"
+heavy_vertical = "\u2503"
+
+# Double box drawing
+double_horizontal = "\u2550"
+double_vertical = "\u2551"
+double_top_left = "\u2554"
+double_top_right = "\u2557"
+double_bottom_left = "\u255A"
+double_bottom_right = "\u255D"
+
+# T-junctions
+t_right = "\u251C"
+t_left = "\u2524"
+t_down = "\u252C"
+t_up = "\u2534"
+cross = "\u253C"
+
+# =============================================================================
+# Banner Styles
+# =============================================================================
+
+[banner]
+# Default banner width
+default_width = 60
+
+# Decorators for fancy banner
+fancy_left = ">>"
+fancy_right = "<<"
+
+# Simple banner line character (uses box.heavy_horizontal)
+simple_line = "\u2501"
+
+# =============================================================================
+# Progress Bar
+# =============================================================================
+
+[progress]
+# Progress bar characters
+bar_filled = "\u2588"       # full block
+bar_empty = "\u2591"        # light shade
+bar_current = "\u2593"      # medium shade
+
+# Step progress format
+step_format = "[%d/%d]"     # e.g., [1/5]
+step_separator = " \u2022 " # bullet between step number and name
+
+# Spinner frames for loading animation
+spinner_frames = ["\u2807", "\u280B", "\u2819", "\u2838", "\u2834", "\u2826"]
+
+# =============================================================================
+# Table Formatting
+# =============================================================================
+
+[table]
+# Column separator
+column_separator = " | "
+
+# Header underline character
+header_underline = "\u2500"
+
+# Row prefix for key-value tables
+kv_separator = ": "
+
+# Padding
+cell_padding = 2
+
+# =============================================================================
+# Tree Formatting
+# =============================================================================
+
+[tree]
+# Tree characters
+branch = "\u251C\u2500\u2500"       # ├──
+last_branch = "\u2514\u2500\u2500"  # └──
+vertical = "\u2502   "              # │
+space = "    "
+
+# Indent per level
+indent = 4
+
+# =============================================================================
+# Question Prompts
+# =============================================================================
+
+[question]
+# Radio button characters
+radio_selected = "\u25C9"    # fisheye (selected)
+radio_unselected = "\u25CB"  # empty circle
+
+# Checkbox characters
+checkbox_checked = "\u2611"   # checked box
+checkbox_unchecked = "\u2610" # unchecked box
+
+# Input field decorators
+input_left = "\u250C"
+input_right = "\u2510"
+input_bottom_left = "\u2514"
+input_bottom_right = "\u2518"
+
+# Confirmation options
+confirm_yes = "\u25B6 Yes"
+confirm_no = "\u25CB No"
+
+# =============================================================================
+# Status Box Widths
+# =============================================================================
+
+[status]
+# Default box width
+box_width = 70
+
+# Status box borders use rounded corners by default
+use_rounded = true
+
+# =============================================================================
+# Themes (Presets)
+# =============================================================================
+
+# Minimal theme - less visual noise
+[themes.minimal]
+icons.success = "+"
+icons.error = "x"
+icons.warning = "!"
+icons.info = "i"
+icons.pending = "-"
+icons.complete = "*"
+box.light_horizontal = "-"
+box.light_vertical = "|"
+progress.bar_filled = "#"
+progress.bar_empty = "-"
+
+# Emoji theme - uses emoji for everything
+[themes.emoji]
+icons.success = "\u2705"
+icons.error = "\u274C"
+icons.warning = "\u26A0\uFE0F"
+icons.info = "\u2139\uFE0F"
+icons.question = "\u2754"
+icons.loading = "\u23F3"
+icons.folder = "\uD83D\uDCC1"
+icons.file = "\uD83D\uDCC4"
+
+# ASCII-only theme - for limited terminals
+[themes.ascii]
+icons.success = "[OK]"
+icons.error = "[X]"
+icons.warning = "[!]"
+icons.info = "[i]"
+icons.pending = "[ ]"
+icons.complete = "[*]"
+box.light_horizontal = "-"
+box.light_vertical = "|"
+box.light_top_left = "+"
+box.light_top_right = "+"
+box.light_bottom_left = "+"
+box.light_bottom_right = "+"
+progress.bar_filled = "#"
+progress.bar_empty = "."

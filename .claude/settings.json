@@ -1,0 +1,85 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/hooks/warning-messages.sh\"; if [[ -x \"$SCRIPT\" ]]; then \"$SCRIPT\" tdd-reminder \"$CLAUDE_FILE_PATH\" 2>/dev/null || true; else if [[ \"$CLAUDE_FILE_PATH\" == *.py ]] && [[ ! -f \"tests/test_$(basename $CLAUDE_FILE_PATH)\" ]]; then echo \"Warning: No test file found. Consider TDD - write tests first!\"; fi; fi; exit 0'",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT\" == *\"git push\"* ]]; then SCRIPT=\".claude/scripts/hooks/warning-messages.sh\"; if [[ -x \"$SCRIPT\" ]]; then \"$SCRIPT\" push-quality 2>/dev/null || true; else echo \"Quality check: Ensure tests pass before pushing.\"; fi; fi; exit 0'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/hooks/warning-messages.sh\"; if [[ -x \"$SCRIPT\" ]]; then \"$SCRIPT\" file-written \"$CLAUDE_FILE_PATH\" 2>/dev/null || true; else echo \"File written: $CLAUDE_FILE_PATH\"; fi; exit 0'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/issue-tracker.sh\"; if [[ -x \"$SCRIPT\" ]]; then if [[ \"$CLAUDE_TOOL_INPUT\" == *\"git commit\"* ]]; then MSG=$(echo \"$CLAUDE_TOOL_INPUT\" | grep -oE \"\\-m [\\\"'\\'']\\'\"'\"'[^\\\"'\\'']*[\\\"'\\'']\\'\"'\"'\" | head -1 | sed \"s/-m [\\\"'\\'']\\'\"'\"'//;s/[\\\"'\\'']\\'\"'\"'$//\"); \"$SCRIPT\" on-commit \"$MSG\" 2>/dev/null || true; fi; fi; exit 0'",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/issue-tracker.sh\"; if [[ -x \"$SCRIPT\" ]]; then if [[ \"$CLAUDE_TOOL_INPUT\" == *\"git push\"* ]]; then \"$SCRIPT\" on-push 2>/dev/null || true; fi; fi; exit 0'",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/issue-tracker.sh\"; if [[ -x \"$SCRIPT\" ]]; then if [[ \"$CLAUDE_TOOL_INPUT\" == *\"gh pr create\"* ]]; then PR_NUM=$(echo \"$CLAUDE_TOOL_OUTPUT\" | grep -oE \"#[0-9]+\" | head -1 | tr -d \"#\"); PR_TITLE=$(echo \"$CLAUDE_TOOL_INPUT\" | grep -oE \"--title [\\\"'\\'']\\'\"'\"'[^\\\"'\\'']*[\\\"'\\'']\\'\"'\"'\" | head -1 | sed \"s/--title [\\\"'\\'']\\'\"'\"'//;s/[\\\"'\\'']\\'\"'\"'$//\"); [[ -n \"$PR_NUM\" ]] && \"$SCRIPT\" on-pr \"$PR_NUM\" \"$PR_TITLE\" 2>/dev/null || true; fi; fi; exit 0'",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/issue-tracker.sh\"; if [[ -x \"$SCRIPT\" ]]; then if [[ \"$CLAUDE_TOOL_INPUT\" =~ (npm test|bun test|yarn test|pnpm test|pytest|jest|vitest|cargo test|go test) ]]; then \"$SCRIPT\" on-tests \"$CLAUDE_TOOL_OUTPUT\" 2>/dev/null || true; fi; fi; exit 0'",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if echo \"$CLAUDE_USER_PROMPT\" | grep -qiE \"deploy|release|production\"; then SCRIPT=\".claude/scripts/hooks/warning-messages.sh\"; if [[ -x \"$SCRIPT\" ]]; then \"$SCRIPT\" deploy-gate 2>/dev/null || true; else echo \"Deployment requested - ensure all quality gates pass.\"; fi; fi; exit 0'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\".claude/scripts/issue-tracker.sh\"; if [[ -x \"$SCRIPT\" ]]; then echo \"Issue tracking status:\"; \"$SCRIPT\" status 2>/dev/null || true; fi; exit 0'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

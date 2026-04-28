@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Tech stack options for project initialization",
+  "version": "1.0.0",
+
+  "frontend": {
+    "title": "Frontend Framework",
+    "question": "Frontend framework?",
+    "options": [
+      {
+        "id": "react",
+        "label": "React (Recommended)",
+        "description": "Component-based UI library by Meta",
+        "detect": ["package.json:react", "package.json:@types/react"],
+        "scaffolds": ["create-react-app", "vite", "next"]
+      },
+      {
+        "id": "vue",
+        "label": "Vue",
+        "description": "Progressive JavaScript framework",
+        "detect": ["package.json:vue", "vue.config.js"],
+        "scaffolds": ["create-vue", "vite"]
+      },
+      {
+        "id": "angular",
+        "label": "Angular",
+        "description": "Full-featured framework by Google",
+        "detect": ["package.json:@angular/core", "angular.json"],
+        "scaffolds": ["@angular/cli"]
+      },
+      {
+        "id": "svelte",
+        "label": "Svelte",
+        "description": "Compile-time framework",
+        "detect": ["package.json:svelte", "svelte.config.js"],
+        "scaffolds": ["create-svelte"]
+      },
+      {
+        "id": "nextjs",
+        "label": "Next.js",
+        "description": "React framework with SSR/SSG",
+        "detect": ["package.json:next", "next.config.js"],
+        "scaffolds": ["create-next-app"]
+      },
+      {
+        "id": "solid",
+        "label": "SolidJS",
+        "description": "Reactive UI library",
+        "detect": ["package.json:solid-js"],
+        "scaffolds": ["degit solidjs/templates/js"]
+      }
+    ]
+  },
+
+  "backend": {
+    "title": "Backend Framework",
+    "question": "Backend framework?",
+    "options": [
+      {
+        "id": "nodejs-express",
+        "label": "Node.js/Express",
+        "description": "Minimal and flexible Node.js framework",
+        "detect": ["package.json:express"],
+        "language": "javascript"
+      },
+      {
+        "id": "nodejs-fastify",
+        "label": "Node.js/Fastify",
+        "description": "Fast and low overhead web framework",
+        "detect": ["package.json:fastify"],
+        "language": "javascript"
+      },
+      {
+        "id": "nodejs-nestjs",
+        "label": "Node.js/NestJS",
+        "description": "Progressive Node.js framework",
+        "detect": ["package.json:@nestjs/core"],
+        "language": "typescript"
+      },
+      {
+        "id": "python-fastapi",
+        "label": "Python/FastAPI",
+        "description": "Modern, fast Python web framework",
+        "detect": ["requirements.txt:fastapi", "pyproject.toml:fastapi"],
+        "language": "python"
+      },
+      {
+        "id": "python-django",
+        "label": "Python/Django",
+        "description": "High-level Python web framework",
+        "detect": ["requirements.txt:django", "manage.py"],
+        "language": "python"
+      },
+      {
+        "id": "python-flask",
+        "label": "Python/Flask",
+        "description": "Lightweight Python web framework",
+        "detect": ["requirements.txt:flask"],
+        "language": "python"
+      },
+      {
+        "id": "go",
+        "label": "Go",
+        "description": "Go with Gin/Echo/Chi",
+        "detect": ["go.mod", "go.sum"],
+        "language": "go"
+      },
+      {
+        "id": "rust",
+        "label": "Rust",
+        "description": "Rust with Actix/Axum/Rocket",
+        "detect": ["Cargo.toml"],
+        "language": "rust"
+      },
+      {
+        "id": "bun",
+        "label": "Bun",
+        "description": "All-in-one JavaScript runtime",
+        "detect": ["bun.lockb", "bunfig.toml"],
+        "language": "typescript"
+      }
+    ]
+  },
+
+  "mobile": {
+    "title": "Mobile Framework",
+    "question": "Mobile approach?",
+    "options": [
+      {
+        "id": "react-native",
+        "label": "React Native (Recommended)",
+        "description": "Cross-platform with React",
+        "detect": ["package.json:react-native"]
+      },
+      {
+        "id": "flutter",
+        "label": "Flutter",
+        "description": "Cross-platform with Dart",
+        "detect": ["pubspec.yaml"]
+      },
+      {
+        "id": "expo",
+        "label": "Expo",
+        "description": "Managed React Native workflow",
+        "detect": ["package.json:expo", "app.json:expo"]
+      },
+      {
+        "id": "native-ios",
+        "label": "Native iOS (Swift)",
+        "description": "Native iOS development",
+        "detect": ["*.xcodeproj", "*.xcworkspace", "Package.swift"]
+      },
+      {
+        "id": "native-android",
+        "label": "Native Android (Kotlin)",
+        "description": "Native Android development",
+        "detect": ["build.gradle", "build.gradle.kts"]
+      },
+      {
+        "id": "tauri",
+        "label": "Tauri",
+        "description": "Desktop/Mobile with web technologies",
+        "detect": ["tauri.conf.json", "src-tauri"]
+      }
+    ]
+  },
+
+  "repository": {
+    "title": "Repository Structure",
+    "question": "Repository approach?",
+    "options": [
+      {
+        "id": "single",
+        "label": "Single repo (Recommended for most)",
+        "description": "One repository for the entire project"
+      },
+      {
+        "id": "monorepo",
+        "label": "Monorepo with workspaces",
+        "description": "Single repo with multiple packages",
+        "followup": "monorepo_tool"
+      },
+      {
+        "id": "multi",
+        "label": "Multi-repo",
+        "description": "Separate repositories for each service"
+      }
+    ]
+  },
+
+  "monorepo_tool": {
+    "title": "Monorepo Tool",
+    "question": "Monorepo tool?",
+    "condition": "repository === 'monorepo'",
+    "options": [
+      {
+        "id": "nx",
+        "label": "Nx (Recommended)",
+        "description": "Smart monorepo build system",
+        "detect": ["nx.json"]
+      },
+      {
+        "id": "turborepo",
+        "label": "Turborepo",
+        "description": "High-performance build system",
+        "detect": ["turbo.json"]
+      },
+      {
+        "id": "pnpm",
+        "label": "pnpm workspaces",
+        "description": "Fast, disk space efficient",
+        "detect": ["pnpm-workspace.yaml"]
+      },
+      {
+        "id": "yarn",
+        "label": "Yarn workspaces",
+        "description": "Yarn's built-in workspaces",
+        "detect": ["package.json:workspaces"]
+      },
+      {
+        "id": "lerna",
+        "label": "Lerna",
+        "description": "Original monorepo tool",
+        "detect": ["lerna.json"]
+      }
+    ]
+  },
+
+  "team_size": {
+    "title": "Team Size",
+    "question": "Team size?",
+    "options": [
+      {
+        "id": "solo",
+        "label": "Solo developer",
+        "description": "Working alone",
+        "workflow": "lightweight"
+      },
+      {
+        "id": "small",
+        "label": "Small team (2-5)",
+        "description": "Small collaborative team",
+        "workflow": "standard"
+      },
+      {
+        "id": "medium",
+        "label": "Medium team (6-15)",
+        "description": "Growing team",
+        "workflow": "structured"
+      },
+      {
+        "id": "large",
+        "label": "Large team (15+)",
+        "description": "Large organization",
+        "workflow": "enterprise"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+# Dependencies for example skill scripts
+#
+# Install with: pip install -r requirements.txt
+#
+# Note: When using skills via the Claude API, only pre-installed packages
+# are available. Check the code execution tool documentation for available packages.
+# https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool
+
+# Core dependencies (usually pre-installed)
+# python>=3.8
+
+# Optional - uncomment if needed for your skill
+# pandas>=2.0.0
+# numpy>=1.24.0
+# requests>=2.28.0
+# pdfplumber>=0.9.0
+# pypdf>=3.0.0
+# openpyxl>=3.1.0
+# python-docx>=0.8.0
+# jsonschema>=4.0.0

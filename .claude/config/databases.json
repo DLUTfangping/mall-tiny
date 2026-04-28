@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Database options for project initialization",
+  "version": "1.0.0",
+
+  "databases": {
+    "title": "Database",
+    "question": "Database?",
+    "options": [
+      {
+        "id": "postgresql",
+        "label": "PostgreSQL (Recommended)",
+        "description": "Powerful open-source relational database",
+        "type": "sql",
+        "detect": ["docker-compose.yml:postgres", "package.json:pg", "requirements.txt:psycopg"],
+        "orms": {
+          "javascript": ["prisma", "drizzle", "typeorm", "sequelize", "knex"],
+          "python": ["sqlalchemy", "django-orm", "tortoise-orm"],
+          "go": ["gorm", "sqlx", "ent"],
+          "rust": ["diesel", "sqlx", "sea-orm"]
+        }
+      },
+      {
+        "id": "mysql",
+        "label": "MySQL",
+        "description": "Popular open-source relational database",
+        "type": "sql",
+        "detect": ["docker-compose.yml:mysql", "package.json:mysql2", "requirements.txt:mysql"],
+        "orms": {
+          "javascript": ["prisma", "typeorm", "sequelize", "knex"],
+          "python": ["sqlalchemy", "django-orm"],
+          "go": ["gorm", "sqlx"]
+        }
+      },
+      {
+        "id": "mongodb",
+        "label": "MongoDB",
+        "description": "Document-oriented NoSQL database",
+        "type": "nosql",
+        "detect": ["docker-compose.yml:mongo", "package.json:mongoose", "requirements.txt:pymongo"],
+        "orms": {
+          "javascript": ["mongoose", "mongodb"],
+          "python": ["motor", "pymongo", "mongoengine"],
+          "go": ["mongo-driver"]
+        }
+      },
+      {
+        "id": "sqlite",
+        "label": "SQLite",
+        "description": "Lightweight file-based database",
+        "type": "sql",
+        "detect": ["*.db", "*.sqlite", "*.sqlite3"],
+        "orms": {
+          "javascript": ["prisma", "drizzle", "better-sqlite3", "sql.js"],
+          "python": ["sqlite3", "sqlalchemy"],
+          "go": ["gorm"]
+        }
+      },
+      {
+        "id": "redis",
+        "label": "Redis",
+        "description": "In-memory data store (cache/queue)",
+        "type": "cache",
+        "detect": ["docker-compose.yml:redis", "package.json:redis", "package.json:ioredis"],
+        "use_cases": ["caching", "sessions", "queues", "pub-sub"]
+      },
+      {
+        "id": "dynamodb",
+        "label": "DynamoDB",
+        "description": "AWS managed NoSQL database",
+        "type": "nosql",
+        "detect": ["package.json:@aws-sdk/client-dynamodb"],
+        "cloud": "aws"
+      },
+      {
+        "id": "supabase",
+        "label": "Supabase",
+        "description": "Open-source Firebase alternative (PostgreSQL)",
+        "type": "baas",
+        "detect": ["package.json:@supabase/supabase-js"],
+        "features": ["auth", "realtime", "storage", "edge-functions"]
+      },
+      {
+        "id": "firebase",
+        "label": "Firebase",
+        "description": "Google's app development platform",
+        "type": "baas",
+        "detect": ["package.json:firebase", "firebase.json"],
+        "features": ["auth", "firestore", "storage", "functions"]
+      },
+      {
+        "id": "planetscale",
+        "label": "PlanetScale",
+        "description": "Serverless MySQL platform",
+        "type": "sql",
+        "detect": [".pscale.yaml"],
+        "features": ["branching", "serverless", "vitess"]
+      },
+      {
+        "id": "turso",
+        "label": "Turso",
+        "description": "Edge-hosted SQLite (libSQL)",
+        "type": "sql",
+        "detect": ["package.json:@libsql/client"],
+        "features": ["edge", "embedded-replicas"]
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No database needed"
+      }
+    ]
+  },
+
+  "caching": {
+    "title": "Caching Layer",
+    "question": "Add caching?",
+    "options": [
+      {
+        "id": "redis",
+        "label": "Redis",
+        "description": "In-memory data store"
+      },
+      {
+        "id": "memcached",
+        "label": "Memcached",
+        "description": "Distributed memory caching"
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No caching layer"
+      }
+    ]
+  },
+
+  "search": {
+    "title": "Search Engine",
+    "question": "Add search?",
+    "options": [
+      {
+        "id": "elasticsearch",
+        "label": "Elasticsearch",
+        "description": "Distributed search and analytics"
+      },
+      {
+        "id": "meilisearch",
+        "label": "Meilisearch",
+        "description": "Lightning-fast search engine"
+      },
+      {
+        "id": "typesense",
+        "label": "Typesense",
+        "description": "Fast, typo-tolerant search"
+      },
+      {
+        "id": "algolia",
+        "label": "Algolia",
+        "description": "Hosted search service"
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No search engine"
+      }
+    ]
+  }
+}

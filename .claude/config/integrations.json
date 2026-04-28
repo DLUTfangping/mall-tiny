@@ -1,0 +1,261 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Integration options for project initialization",
+  "version": "1.0.0",
+
+  "issue_tracking": {
+    "title": "Issue Tracking",
+    "question": "Issue tracking integration?",
+    "options": [
+      {
+        "id": "github",
+        "label": "GitHub Issues (Recommended)",
+        "description": "Built-in GitHub issue tracking",
+        "detect": [".github"],
+        "requires": ["gh"]
+      },
+      {
+        "id": "linear",
+        "label": "Linear",
+        "description": "Modern issue tracking for teams",
+        "requires": ["LINEAR_API_KEY"]
+      },
+      {
+        "id": "jira",
+        "label": "Jira",
+        "description": "Enterprise issue tracking",
+        "requires": ["JIRA_URL", "JIRA_USER", "JIRA_TOKEN"]
+      },
+      {
+        "id": "local",
+        "label": "Local (PROJECT_STATUS.md)",
+        "description": "Track issues in markdown files"
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No issue tracking"
+      }
+    ]
+  },
+
+  "ci_cd": {
+    "title": "CI/CD",
+    "question": "CI/CD platform?",
+    "multiSelect": true,
+    "options": [
+      {
+        "id": "github-actions",
+        "label": "GitHub Actions (Recommended)",
+        "description": "Native GitHub CI/CD",
+        "detect": [".github/workflows"]
+      },
+      {
+        "id": "gitlab-ci",
+        "label": "GitLab CI",
+        "description": "GitLab's built-in CI/CD",
+        "detect": [".gitlab-ci.yml"]
+      },
+      {
+        "id": "circleci",
+        "label": "CircleCI",
+        "description": "Cloud-based CI/CD",
+        "detect": [".circleci"]
+      },
+      {
+        "id": "jenkins",
+        "label": "Jenkins",
+        "description": "Self-hosted automation server",
+        "detect": ["Jenkinsfile"]
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No CI/CD setup"
+      }
+    ]
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "question": "Notification integrations?",
+    "multiSelect": true,
+    "options": [
+      {
+        "id": "slack",
+        "label": "Slack",
+        "description": "Team messaging",
+        "requires": ["SLACK_WEBHOOK_URL"]
+      },
+      {
+        "id": "discord",
+        "label": "Discord",
+        "description": "Community messaging",
+        "requires": ["DISCORD_WEBHOOK_URL"]
+      },
+      {
+        "id": "email",
+        "label": "Email",
+        "description": "Email notifications",
+        "requires": ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"]
+      },
+      {
+        "id": "teams",
+        "label": "Microsoft Teams",
+        "description": "Enterprise messaging",
+        "requires": ["TEAMS_WEBHOOK_URL"]
+      },
+      {
+        "id": "none",
+        "label": "None",
+        "description": "No notifications"
+      }
+    ]
+  },
+
+  "development_preferences": {
+    "title": "Development Preferences",
+    "question": "Development preferences?",
+    "multiSelect": true,
+    "options": [
+      {
+        "id": "typescript",
+        "label": "TypeScript (Recommended)",
+        "description": "Type-safe JavaScript",
+        "detect": ["tsconfig.json", "package.json:typescript"]
+      },
+      {
+        "id": "eslint",
+        "label": "ESLint + Prettier",
+        "description": "Linting and formatting",
+        "detect": [".eslintrc*", ".prettierrc*", "eslint.config.*"]
+      },
+      {
+        "id": "husky",
+        "label": "Git hooks (Husky)",
+        "description": "Pre-commit hooks",
+        "detect": [".husky", "package.json:husky"]
+      },
+      {
+        "id": "conventional-commits",
+        "label": "Conventional Commits",
+        "description": "Standardized commit messages",
+        "detect": ["commitlint.config.*", ".commitlintrc*"]
+      },
+      {
+        "id": "testing",
+        "label": "Automated Testing",
+        "description": "Test framework setup"
+      }
+    ]
+  },
+
+  "testing": {
+    "title": "Testing Framework",
+    "question": "Testing framework?",
+    "condition": "development_preferences.includes('testing')",
+    "options": [
+      {
+        "id": "vitest",
+        "label": "Vitest (Recommended)",
+        "description": "Fast Vite-native testing",
+        "detect": ["vitest.config.*", "package.json:vitest"],
+        "language": "javascript"
+      },
+      {
+        "id": "jest",
+        "label": "Jest",
+        "description": "Popular JavaScript testing",
+        "detect": ["jest.config.*", "package.json:jest"],
+        "language": "javascript"
+      },
+      {
+        "id": "pytest",
+        "label": "pytest",
+        "description": "Python testing framework",
+        "detect": ["pytest.ini", "pyproject.toml:pytest"],
+        "language": "python"
+      },
+      {
+        "id": "go-test",
+        "label": "go test",
+        "description": "Built-in Go testing",
+        "detect": ["*_test.go"],
+        "language": "go"
+      },
+      {
+        "id": "playwright",
+        "label": "Playwright",
+        "description": "End-to-end testing",
+        "detect": ["playwright.config.*"]
+      },
+      {
+        "id": "cypress",
+        "label": "Cypress",
+        "description": "E2E and component testing",
+        "detect": ["cypress.config.*", "cypress"]
+      }
+    ]
+  },
+
+  "deployment": {
+    "title": "Deployment Target",
+    "question": "Where will you deploy?",
+    "multiSelect": true,
+    "options": [
+      {
+        "id": "vercel",
+        "label": "Vercel",
+        "description": "Frontend/Full-stack deployment",
+        "detect": ["vercel.json"]
+      },
+      {
+        "id": "netlify",
+        "label": "Netlify",
+        "description": "Frontend deployment",
+        "detect": ["netlify.toml"]
+      },
+      {
+        "id": "aws",
+        "label": "AWS",
+        "description": "Amazon Web Services",
+        "detect": ["serverless.yml", "cdk.json", "sam.yaml"]
+      },
+      {
+        "id": "gcp",
+        "label": "Google Cloud",
+        "description": "Google Cloud Platform",
+        "detect": ["app.yaml", "cloudbuild.yaml"]
+      },
+      {
+        "id": "azure",
+        "label": "Azure",
+        "description": "Microsoft Azure",
+        "detect": ["azure-pipelines.yml"]
+      },
+      {
+        "id": "docker",
+        "label": "Docker/Kubernetes",
+        "description": "Container deployment",
+        "detect": ["Dockerfile", "docker-compose.yml", "k8s"]
+      },
+      {
+        "id": "railway",
+        "label": "Railway",
+        "description": "Simple deployment platform",
+        "detect": ["railway.json"]
+      },
+      {
+        "id": "fly",
+        "label": "Fly.io",
+        "description": "Global app deployment",
+        "detect": ["fly.toml"]
+      },
+      {
+        "id": "self-hosted",
+        "label": "Self-hosted",
+        "description": "Your own servers"
+      }
+    ]
+  }
+}
