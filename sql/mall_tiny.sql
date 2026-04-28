@@ -131,6 +131,8 @@ INSERT INTO `ums_menu` VALUES ('22', '21', '2020-02-07 16:29:51', '用户列表'
 INSERT INTO `ums_menu` VALUES ('23', '21', '2020-02-07 16:30:13', '角色列表', '1', '0', 'role', 'ums-role', '0');
 INSERT INTO `ums_menu` VALUES ('24', '21', '2020-02-07 16:30:53', '菜单列表', '1', '0', 'menu', 'ums-menu', '0');
 INSERT INTO `ums_menu` VALUES ('25', '21', '2020-02-07 16:31:13', '资源列表', '1', '0', 'resource', 'ums-resource', '0');
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (0, NOW(), '药材保障', 0, 0, 'medicine', 'product', 0);
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (LAST_INSERT_ID(), NOW(), '药材字典', 1, 0, 'medicineDrug', 'product-list', 0');
 
 -- ----------------------------
 -- Table structure for ums_resource
@@ -359,3 +361,34 @@ INSERT INTO `ums_role_resource_relation` VALUES ('212', '8', '26');
 INSERT INTO `ums_role_resource_relation` VALUES ('213', '8', '27');
 INSERT INTO `ums_role_resource_relation` VALUES ('214', '8', '28');
 INSERT INTO `ums_role_resource_relation` VALUES ('215', '8', '29');
+
+-- ----------------------------
+-- Table structure for medicine_drug
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_drug`;
+CREATE TABLE `medicine_drug` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `drug_code` varchar(64) NOT NULL COMMENT '药品编码',
+  `drug_name` varchar(100) NOT NULL COMMENT '药品名称',
+  `common_name` varchar(100) DEFAULT NULL COMMENT '通用名',
+  `english_name` varchar(100) DEFAULT NULL COMMENT '英文名',
+  `drug_type` varchar(20) DEFAULT NULL COMMENT '药品类型：WESTERN=西药, TCM=中成药, HERB=中药饮片',
+  `spec` varchar(100) DEFAULT NULL COMMENT '规格（如10mg×100片）',
+  `unit` varchar(20) DEFAULT NULL COMMENT '单位（盒、瓶、片、克）',
+  `manufacturer` varchar(200) DEFAULT NULL COMMENT '生产厂家',
+  `approval_number` varchar(64) DEFAULT NULL COMMENT '批准文号',
+  `barcode` varchar(64) DEFAULT NULL COMMENT '条形码',
+  `storage_condition` varchar(100) DEFAULT NULL COMMENT '储存条件',
+  `min_stock` decimal(10,2) DEFAULT NULL COMMENT '最低库存量',
+  `max_stock` decimal(10,2) DEFAULT NULL COMMENT '最高库存量',
+  `default_supplier` varchar(200) DEFAULT NULL COMMENT '默认供应商',
+  `insurance_code` varchar(64) DEFAULT NULL COMMENT '医保编码',
+  `is_essential` int(1) DEFAULT '0' COMMENT '基本药物标识：0=否，1=是',
+  `prescription_type` varchar(20) DEFAULT NULL COMMENT '处方药分类：OTC_RX=处方药, OTC_OTC=非处方药, OTC_BOTH=双跨',
+  `status` int(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_drug_code` (`drug_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药品字典表';
