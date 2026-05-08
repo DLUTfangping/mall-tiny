@@ -132,7 +132,8 @@ INSERT INTO `ums_menu` VALUES ('23', '21', '2020-02-07 16:30:13', '角色列表'
 INSERT INTO `ums_menu` VALUES ('24', '21', '2020-02-07 16:30:53', '菜单列表', '1', '0', 'menu', 'ums-menu', '0');
 INSERT INTO `ums_menu` VALUES ('25', '21', '2020-02-07 16:31:13', '资源列表', '1', '0', 'resource', 'ums-resource', '0');
 INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (0, NOW(), '药材保障', 0, 0, 'medicine', 'product', 0);
-INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (LAST_INSERT_ID(), NOW(), '药材字典', 1, 0, 'medicineDrug', 'product-list', 0');
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (LAST_INSERT_ID(), NOW(), '药材字典', 1, 0, 'medicineDrug', 'product-list', 0);
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (LAST_INSERT_ID(), NOW(), '库存预警', 1, 1, 'drugWarning', 'product-list', 0);
 
 -- ----------------------------
 -- Table structure for ums_resource
@@ -384,7 +385,13 @@ CREATE TABLE `medicine_drug` (
   `default_supplier` varchar(200) DEFAULT NULL COMMENT '默认供应商',
   `insurance_code` varchar(64) DEFAULT NULL COMMENT '医保编码',
   `is_essential` int(1) DEFAULT '0' COMMENT '基本药物标识：0=否，1=是',
+  `drug_category` varchar(30) DEFAULT NULL COMMENT '药品分类：NORMAL=普通药品, ANESTHETIC=麻醉药品, PSYCHOTROPIC_I=精神类I类, PSYCHOTROPIC_II=精神类II类',
+  `base_spec` varchar(30) DEFAULT NULL COMMENT '基本规格（如0.75mg/片）',
   `prescription_type` varchar(20) DEFAULT NULL COMMENT '处方药分类：OTC_RX=处方药, OTC_OTC=非处方药, OTC_BOTH=双跨',
+  `skin_test_required` int(1) DEFAULT '0' COMMENT '是否需要皮试：0=否，1=是',
+  `dosage_form` varchar(30) DEFAULT NULL COMMENT '剂型：TABLET片剂, CAPSULE胶囊, INJECTION注射剂, GRANULE颗粒, SOLUTION溶液, OINTMENT软膏, PATCH贴剂, HERB饮片',
+  `base_unit` varchar(20) DEFAULT NULL COMMENT '基本单位：片、粒、支、克、毫升',
+  `conversion_rate` decimal(10,4) DEFAULT NULL COMMENT '转换率：包装单位与基本单位的转换关系',
   `status` int(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
@@ -392,3 +399,45 @@ CREATE TABLE `medicine_drug` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_drug_code` (`drug_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药品字典表';
+
+-- ----------------------------
+-- Table structure for medicine_drug_usage
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_drug_usage`;
+CREATE TABLE `medicine_drug_usage` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `drug_code` varchar(64) NOT NULL COMMENT '药品编码',
+  `usage` varchar(30) DEFAULT NULL COMMENT '用法：ORAL口服, INJECTION注射, IV_DRIP静滴, EXTERNAL外用, INHALATION吸入, RECTAL直肠给药',
+  `frequency` varchar(30) DEFAULT NULL COMMENT '频次：QD每日1次, BID每日2次, TID每日3次, QID每日4次, Q12H每12小时, Q8H每8小时, PRN必要时',
+  `single_dose` decimal(10,4) DEFAULT NULL COMMENT '单次剂量',
+  `dose_unit` varchar(20) DEFAULT NULL COMMENT '剂量单位：片、支、克、毫升',
+  `max_daily_dose` decimal(10,4) DEFAULT NULL COMMENT '日最大剂量',
+  `age_range` varchar(50) DEFAULT NULL COMMENT '适用年龄范围（如：成人、儿童6-12岁）',
+  `contraindication` varchar(500) DEFAULT NULL COMMENT '禁忌症',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` int(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_drug_code` (`drug_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药品用法表';
+
+-- ----------------------------
+-- Table structure for medicine_drug_warning
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_drug_warning`;
+CREATE TABLE `medicine_drug_warning` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `drug_code` varchar(64) NOT NULL COMMENT '药品编码',
+  `min_warning_stock` decimal(10,2) DEFAULT NULL COMMENT '最低预警库存量',
+  `max_warning_stock` decimal(10,2) DEFAULT NULL COMMENT '最高预警库存量',
+  `validity_warning_days` int(11) DEFAULT NULL COMMENT '有效期预警天数（提前N天预警）',
+  `batch_warning_enabled` int(1) DEFAULT '0' COMMENT '是否启用批号预警：0=否，1=是',
+  `reorder_point` decimal(10,2) DEFAULT NULL COMMENT '再订货点',
+  `inspection_cycle` int(11) DEFAULT NULL COMMENT '盘点周期（天）',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_drug_code` (`drug_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药品预警表';

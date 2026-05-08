@@ -78,8 +78,26 @@ public class MedicineDrug implements Serializable {
     @ApiModelProperty(value = "基本药物标识：0=否，1=是")
     private Integer isEssential;
 
+    @ApiModelProperty(value = "药品分类：NORMAL=普通药品, ANESTHETIC=麻醉药品, PSYCHOTROPIC_I=精神类I类, PSYCHOTROPIC_II=精神类II类")
+    private String drugCategory;
+
+    @ApiModelProperty(value = "基本规格（如0.75mg/片）")
+    private String baseSpec;
+
     @ApiModelProperty(value = "处方药分类：OTC_RX=处方药, OTC_OTC=非处方药, OTC_BOTH=双跨")
     private String prescriptionType;
+
+    @ApiModelProperty(value = "是否需要皮试：0=否，1=是")
+    private Integer skinTestRequired;
+
+    @ApiModelProperty(value = "剂型：TABLET片剂, CAPSULE胶囊, INJECTION注射剂, GRANULE颗粒, SOLUTION溶液, OINTMENT软膏, PATCH贴剂, HERB饮片")
+    private String dosageForm;
+
+    @ApiModelProperty(value = "基本单位：片、粒、支、克、毫升")
+    private String baseUnit;
+
+    @ApiModelProperty(value = "转换率：包装单位与基本单位的转换关系")
+    private BigDecimal conversionRate;
 
     @ApiModelProperty(value = "状态：0=禁用，1=启用")
     private Integer status;

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/pikaqiu/Documents/front/mall-admin-web/**)",
+      "Bash(npm run *)"
+    ]
+  }
+}
