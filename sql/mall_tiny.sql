@@ -441,3 +441,96 @@ CREATE TABLE `medicine_drug_warning` (
   PRIMARY KEY (`id`),
   KEY `idx_drug_code` (`drug_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药品预警表';
+
+-- ----------------------------
+-- Table structure for medicine_pharmacy
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_pharmacy`;
+CREATE TABLE `medicine_pharmacy` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `pharmacy_name` varchar(100) NOT NULL COMMENT '药房名称',
+  `creator` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `status` int(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `is_default` int(1) DEFAULT '0' COMMENT '是否是默认药房：0=否，1=是',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药房表';
+
+-- 添加药房管理菜单
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (40, NOW(), '药房管理', 1, 2, 'pharmacy', 'product-list', 0);
+
+-- ----------------------------
+-- Table structure for medicine_stock_in
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_stock_in`;
+CREATE TABLE `medicine_stock_in` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `in_no` varchar(64) NOT NULL COMMENT '入库单号',
+  `pharmacy_id` bigint(20) NOT NULL COMMENT '入库药房ID',
+  `pharmacy_name` varchar(100) DEFAULT NULL COMMENT '药房名称（用于显示）',
+  `supplier` varchar(200) DEFAULT NULL COMMENT '供应商',
+  `total_amount` decimal(12,2) DEFAULT NULL COMMENT '总金额',
+  `operator` varchar(64) DEFAULT NULL COMMENT '操作人',
+  `status` int(1) DEFAULT '0' COMMENT '状态：0=草稿，1=已入库',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_in_no` (`in_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材入库单主表';
+
+-- ----------------------------
+-- Table structure for medicine_stock_in_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_stock_in_detail`;
+CREATE TABLE `medicine_stock_in_detail` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `in_id` bigint(20) NOT NULL COMMENT '入库单ID',
+  `drug_id` bigint(20) NOT NULL COMMENT '药材ID',
+  `drug_code` varchar(64) NOT NULL COMMENT '药材编码',
+  `drug_name` varchar(100) DEFAULT NULL COMMENT '药材名称（用于显示）',
+  `common_name` varchar(100) DEFAULT NULL COMMENT '通用名（用于显示）',
+  `drug_type` varchar(50) DEFAULT NULL COMMENT '药材类型（用于显示）',
+  `prescription_type` varchar(20) DEFAULT NULL COMMENT '处方药分类（用于显示）',
+  `drug_category` varchar(50) DEFAULT NULL COMMENT '药品分类（用于显示）',
+  `dosage_form` varchar(50) DEFAULT NULL COMMENT '剂型（用于显示）',
+  `spec` varchar(100) DEFAULT NULL COMMENT '包装规格（用于显示）',
+  `is_essential` int(1) DEFAULT NULL COMMENT '是否基本药物（用于显示）',
+  `skin_test_required` int(1) DEFAULT NULL COMMENT '是否需要皮试（用于显示）',
+  `manufacturer` varchar(200) DEFAULT NULL COMMENT '生产厂家（用于显示）',
+  `batch_no` varchar(64) DEFAULT NULL COMMENT '批号',
+  `production_date` datetime DEFAULT NULL COMMENT '生产日期',
+  `expiry_date` datetime DEFAULT NULL COMMENT '有效期',
+  `quantity` decimal(10,2) NOT NULL COMMENT '入库数量',
+  `unit_price` decimal(10,4) DEFAULT NULL COMMENT '单价',
+  `amount` decimal(12,2) DEFAULT NULL COMMENT '金额',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_in_id` (`in_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材入库单明细表';
+
+-- ----------------------------
+-- Table structure for medicine_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_stock`;
+CREATE TABLE `medicine_stock` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `drug_id` bigint(20) NOT NULL COMMENT '药材ID',
+  `pharmacy_id` bigint(20) NOT NULL COMMENT '药房ID',
+  `pharmacy_name` varchar(100) DEFAULT NULL COMMENT '药房名称（用于显示）',
+  `batch_no` varchar(64) DEFAULT NULL COMMENT '批号',
+  `quantity` decimal(10,2) NOT NULL COMMENT '当前库存',
+  `production_date` datetime DEFAULT NULL COMMENT '生产日期',
+  `expiry_date` datetime DEFAULT NULL COMMENT '有效期',
+  `unit_price` decimal(10,4) DEFAULT NULL COMMENT '单价',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_drug_id` (`drug_id`),
+  KEY `idx_pharmacy_id` (`pharmacy_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材库存表';
+
+-- 添加药材入库菜单
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (40, NOW(), '药材入库', 1, 3, 'stockIn', 'product-list', 0);
