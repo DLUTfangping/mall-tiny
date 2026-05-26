@@ -81,6 +81,9 @@ public class MedicineStockInDetail {
     @ApiModelProperty(value = "单价")
     private BigDecimal unitPrice;
 
+    @ApiModelProperty(value = "包装单位")
+    private String unit;
+
     @ApiModelProperty(value = "金额")
     private BigDecimal amount;
 

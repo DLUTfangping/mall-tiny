@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -103,5 +104,13 @@ public class MedicineDrugController {
             return CommonResult.success(null);
         }
         return CommonResult.failed();
+    }
+
+    @ApiOperation("搜索药品字典")
+    @RequestMapping(value = "/searchDrugs", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<MedicineDrug>> search(@RequestParam(required = false) String keyword) {
+        List<MedicineDrug> drugs = drugService.search(keyword);
+        return CommonResult.success(drugs);
     }
 }

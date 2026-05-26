@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.macro.mall.tiny.modules.medicine.model.MedicineStock;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -42,4 +43,11 @@ public interface MedicineStockService extends IService<MedicineStock> {
      * @return 库存列表
      */
     List<MedicineStock> listByDrugId(Long drugId);
+
+    /**
+     * 根据药房获取库存药品列表（带药品详细信息）
+     * @param pharmacyId 药房ID
+     * @return 库存药品列表
+     */
+    List<Map<String, Object>> getStockListByPharmacy(Long pharmacyId);
 }

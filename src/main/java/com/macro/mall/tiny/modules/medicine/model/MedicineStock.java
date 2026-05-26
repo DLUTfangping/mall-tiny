@@ -89,6 +89,18 @@ public class MedicineStock {
     @ApiModelProperty(value = "最低预警库存")
     private BigDecimal minWarningStock;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "最高预警库存")
+    private BigDecimal maxWarningStock;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "批号预警是否启用")
+    private Integer batchWarningEnabled;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "批号预警阈值")
+    private BigDecimal batchWarningThreshold;
+
     @ApiModelProperty(value = "生产日期")
     private Date productionDate;
 
@@ -97,6 +109,18 @@ public class MedicineStock {
 
     @ApiModelProperty(value = "单价")
     private BigDecimal unitPrice;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "包装单位")
+    private String unit;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "基本单位")
+    private String baseUnit;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "转换率")
+    private BigDecimal conversionRate;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;

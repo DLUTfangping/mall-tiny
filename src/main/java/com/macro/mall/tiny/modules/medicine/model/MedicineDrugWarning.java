@@ -42,8 +42,14 @@ public class MedicineDrugWarning implements Serializable {
     @ApiModelProperty(value = "有效期预警天数（提前N天预警）")
     private Integer validityWarningDays;
 
+    @ApiModelProperty(value = "是否启用有效期预警：0=否，1=是")
+    private Integer validityWarningEnabled;
+
     @ApiModelProperty(value = "是否启用批号预警：0=否，1=是")
     private Integer batchWarningEnabled;
+
+    @ApiModelProperty(value = "批号预警阈值（库存低于此值时触发预警）")
+    private BigDecimal batchWarningThreshold;
 
     @ApiModelProperty(value = "再订货点")
     private BigDecimal reorderPoint;

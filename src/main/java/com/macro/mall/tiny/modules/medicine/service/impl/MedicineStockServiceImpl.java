@@ -15,7 +15,10 @@ import com.macro.mall.tiny.modules.medicine.service.MedicineStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -123,6 +126,9 @@ public class MedicineStockServiceImpl extends ServiceImpl<MedicineStockMapper, M
                     stock.setIsEssential(drug.getIsEssential());
                     stock.setSkinTestRequired(drug.getSkinTestRequired());
                     stock.setManufacturer(drug.getManufacturer());
+                    stock.setUnit(drug.getUnit());
+                    stock.setBaseUnit(drug.getBaseUnit());
+                    stock.setConversionRate(drug.getConversionRate());
 
                     // 查询预警配置
                     QueryWrapper<MedicineDrugWarning> warningWrapper = new QueryWrapper<>();
@@ -130,6 +136,9 @@ public class MedicineStockServiceImpl extends ServiceImpl<MedicineStockMapper, M
                     MedicineDrugWarning warning = warningMapper.selectOne(warningWrapper);
                     if (warning != null) {
                         stock.setMinWarningStock(warning.getMinWarningStock());
+                        stock.setMaxWarningStock(warning.getMaxWarningStock());
+                        stock.setBatchWarningEnabled(warning.getBatchWarningEnabled());
+                        stock.setBatchWarningThreshold(warning.getBatchWarningThreshold());
                     }
                 }
             } catch (Exception e) {
@@ -148,5 +157,41 @@ public class MedicineStockServiceImpl extends ServiceImpl<MedicineStockMapper, M
                 stock.setPharmacyName(pharmacy.getPharmacyName());
             }
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> getStockListByPharmacy(Long pharmacyId) {
+        QueryWrapper<MedicineStock> wrapper = new QueryWrapper<>();
+        wrapper.eq("pharmacy_id", pharmacyId);
+        wrapper.gt("quantity", 0);
+        wrapper.orderByDesc("update_time");
+        List<MedicineStock> stocks = this.list(wrapper);
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (MedicineStock stock : stocks) {
+            fillDrugInfo(stock);
+            Map<String, Object> item = new HashMap<>();
+            item.put("id", stock.getId());
+            item.put("drugId", stock.getDrugId());
+            item.put("drugCode", stock.getDrugCode());
+            item.put("drugName", stock.getDrugName());
+            item.put("commonName", stock.getCommonName());
+            item.put("drugType", stock.getDrugType());
+            item.put("prescriptionType", stock.getPrescriptionType());
+            item.put("drugCategory", stock.getDrugCategory());
+            item.put("dosageForm", stock.getDosageForm());
+            item.put("spec", stock.getSpec());
+            item.put("isEssential", stock.getIsEssential());
+            item.put("skinTestRequired", stock.getSkinTestRequired());
+            item.put("manufacturer", stock.getManufacturer());
+            item.put("pharmacyId", stock.getPharmacyId());
+            item.put("batchNo", stock.getBatchNo());
+            item.put("quantity", stock.getQuantity());
+            item.put("unitPrice", stock.getUnitPrice());
+            item.put("productionDate", stock.getProductionDate());
+            item.put("expiryDate", stock.getExpiryDate());
+            result.add(item);
+        }
+        return result;
     }
 }

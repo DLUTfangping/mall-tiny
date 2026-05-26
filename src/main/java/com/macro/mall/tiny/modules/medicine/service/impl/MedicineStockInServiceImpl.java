@@ -117,6 +117,13 @@ public class MedicineStockInServiceImpl extends ServiceImpl<MedicineStockInMappe
         if (stockIn.getDetails() != null && !stockIn.getDetails().isEmpty()) {
             for (MedicineStockInDetail detail : stockIn.getDetails()) {
                 detail.setInId(stockIn.getId());
+                // 设置包装单位
+                if (detail.getUnit() == null && detail.getDrugId() != null) {
+                    MedicineDrug drug = drugMapper.selectById(detail.getDrugId());
+                    if (drug != null) {
+                        detail.setUnit(drug.getUnit());
+                    }
+                }
                 stockInDetailMapper.insert(detail);
             }
         }
@@ -164,6 +171,13 @@ public class MedicineStockInServiceImpl extends ServiceImpl<MedicineStockInMappe
         if (stockIn.getDetails() != null && !stockIn.getDetails().isEmpty()) {
             for (MedicineStockInDetail detail : stockIn.getDetails()) {
                 detail.setInId(id);
+                // 设置包装单位
+                if (detail.getUnit() == null && detail.getDrugId() != null) {
+                    MedicineDrug drug = drugMapper.selectById(detail.getDrugId());
+                    if (drug != null) {
+                        detail.setUnit(drug.getUnit());
+                    }
+                }
                 stockInDetailMapper.insert(detail);
             }
         }
@@ -215,6 +229,13 @@ public class MedicineStockInServiceImpl extends ServiceImpl<MedicineStockInMappe
 
         // 更新库存
         for (MedicineStockInDetail detail : details) {
+            // 查询药品信息获取转换率
+            MedicineDrug drug = drugMapper.selectById(detail.getDrugId());
+            BigDecimal conversionRate = (drug != null && drug.getConversionRate() != null)
+                    ? drug.getConversionRate() : BigDecimal.ONE;
+            // 入库数量转换为基本单位
+            BigDecimal baseQuantity = detail.getQuantity().multiply(conversionRate);
+
             // 检查是否已存在相同批号的库存
             QueryWrapper<MedicineStock> stockWrapper = new QueryWrapper<>();
             stockWrapper.eq("drug_id", detail.getDrugId());
@@ -223,17 +244,17 @@ public class MedicineStockInServiceImpl extends ServiceImpl<MedicineStockInMappe
             MedicineStock existStock = stockMapper.selectOne(stockWrapper);
 
             if (existStock != null) {
-                // 累加库存
-                existStock.setQuantity(existStock.getQuantity().add(detail.getQuantity()));
+                // 累加库存（基本单位）
+                existStock.setQuantity(existStock.getQuantity().add(baseQuantity));
                 existStock.setUpdateTime(new Date());
                 stockMapper.updateById(existStock);
             } else {
-                // 新增库存记录
+                // 新增库存记录（基本单位）
                 MedicineStock newStock = new MedicineStock();
                 newStock.setDrugId(detail.getDrugId());
                 newStock.setPharmacyId(stockIn.getPharmacyId());
                 newStock.setBatchNo(detail.getBatchNo());
-                newStock.setQuantity(detail.getQuantity());
+                newStock.setQuantity(baseQuantity);
                 newStock.setProductionDate(detail.getProductionDate());
                 newStock.setExpiryDate(detail.getExpiryDate());
                 newStock.setUnitPrice(detail.getUnitPrice());

@@ -8,6 +8,8 @@ import com.macro.mall.tiny.modules.medicine.model.MedicineDrug;
 import com.macro.mall.tiny.modules.medicine.service.MedicineDrugService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 药品字典表 Service 实现类
@@ -37,5 +39,17 @@ public class MedicineDrugServiceImpl extends ServiceImpl<MedicineDrugMapper, Med
         }
         wrapper.orderByDesc("create_time");
         return page(page, wrapper);
+    }
+
+    @Override
+    public List<MedicineDrug> search(String keyword) {
+        QueryWrapper<MedicineDrug> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", 1);
+        if (keyword != null && !keyword.isEmpty()) {
+            wrapper.and(w -> w.like("drug_name", keyword).or().like("drug_code", keyword).or().like("common_name", keyword));
+        }
+        wrapper.orderByDesc("create_time");
+        wrapper.last("LIMIT 50");
+        return list(wrapper);
     }
 }
