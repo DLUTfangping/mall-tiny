@@ -433,6 +433,7 @@ CREATE TABLE `medicine_drug_warning` (
   `max_warning_stock` decimal(10,2) DEFAULT NULL COMMENT '最高预警库存量',
   `validity_warning_days` int(11) DEFAULT NULL COMMENT '有效期预警天数（提前N天预警）',
   `batch_warning_enabled` int(1) DEFAULT '0' COMMENT '是否启用批号预警：0=否，1=是',
+  `batch_warning_threshold` decimal(10,2) DEFAULT NULL COMMENT '批号预警阈值（库存低于此值时触发预警）',
   `reorder_point` decimal(10,2) DEFAULT NULL COMMENT '再订货点',
   `inspection_cycle` int(11) DEFAULT NULL COMMENT '盘点周期（天）',
   `remark` varchar(200) DEFAULT NULL COMMENT '备注',
@@ -532,5 +533,118 @@ CREATE TABLE `medicine_stock` (
   KEY `idx_pharmacy_id` (`pharmacy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材库存表';
 
+-- ----------------------------
+-- Table structure for medicine_stock_out
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_stock_out`;
+CREATE TABLE `medicine_stock_out` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `out_no` varchar(64) NOT NULL COMMENT '出库单号',
+  `pharmacy_id` bigint(20) NOT NULL COMMENT '出库药房ID',
+  `pharmacy_name` varchar(100) DEFAULT NULL COMMENT '药房名称（用于显示）',
+  `out_type` varchar(20) DEFAULT 'NORMAL' COMMENT '出库方式：NORMAL-正常出库，ERROR-信息错误，EXPIRED-过期出库，DAMAGED-报损出库，INVENTORY-盘点出库',
+  `operator` varchar(64) DEFAULT NULL COMMENT '操作人',
+  `total_quantity` int(11) DEFAULT NULL COMMENT '总数量',
+  `status` int(1) DEFAULT '1' COMMENT '状态：0=草稿，1=已确认',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_out_no` (`out_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材出库单主表';
+
+-- ----------------------------
+-- Table structure for medicine_stock_out_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `medicine_stock_out_detail`;
+CREATE TABLE `medicine_stock_out_detail` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `out_id` bigint(20) NOT NULL COMMENT '出库单ID',
+  `drug_id` bigint(20) NOT NULL COMMENT '药材ID',
+  `drug_code` varchar(64) NOT NULL COMMENT '药材编码',
+  `drug_name` varchar(100) DEFAULT NULL COMMENT '药材名称（用于显示）',
+  `common_name` varchar(100) DEFAULT NULL COMMENT '通用名（用于显示）',
+  `drug_type` varchar(50) DEFAULT NULL COMMENT '药材类型（用于显示）',
+  `prescription_type` varchar(20) DEFAULT NULL COMMENT '处方药分类（用于显示）',
+  `drug_category` varchar(50) DEFAULT NULL COMMENT '药品分类（用于显示）',
+  `dosage_form` varchar(50) DEFAULT NULL COMMENT '剂型（用于显示）',
+  `spec` varchar(100) DEFAULT NULL COMMENT '包装规格（用于显示）',
+  `is_essential` int(1) DEFAULT NULL COMMENT '是否基本药物（用于显示）',
+  `skin_test_required` int(1) DEFAULT NULL COMMENT '是否需要皮试（用于显示）',
+  `manufacturer` varchar(200) DEFAULT NULL COMMENT '生产厂家（用于显示）',
+  `batch_no` varchar(64) DEFAULT NULL COMMENT '批号',
+  `production_date` datetime DEFAULT NULL COMMENT '生产日期',
+  `expiry_date` datetime DEFAULT NULL COMMENT '有效期',
+  `quantity` decimal(10,2) NOT NULL COMMENT '出库数量',
+  `unit_type` varchar(10) DEFAULT 'BASE' COMMENT '出库单位：PACK-包装单位，BASE-基本单位',
+  `unit_price` decimal(10,4) DEFAULT NULL COMMENT '单价',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_out_id` (`out_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='药材出库单明细表';
+
 -- 添加药材入库菜单
 INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (40, NOW(), '药材入库', 1, 3, 'stockIn', 'product-list', 0);
+
+-- 添加药材出库菜单
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (40, NOW(), '药材出库', 1, 4, 'stockOut', 'product-list', 0);
+
+-- ----------------------------
+-- 字典维护相关表
+-- ----------------------------
+
+-- 字典类型表
+DROP TABLE IF EXISTS `sys_dict_type`;
+CREATE TABLE `sys_dict_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `dict_code` varchar(64) NOT NULL COMMENT '字典编码（如：SEX, DRUG_TYPE）',
+  `dict_name` varchar(100) NOT NULL COMMENT '字典名称',
+  `category` varchar(64) DEFAULT NULL COMMENT '业务分类（如：基础数据、药材业务）',
+  `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
+  `sort` int(11) DEFAULT '0' COMMENT '排序',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_dict_code` (`dict_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典类型表';
+
+-- 字典明细表
+DROP TABLE IF EXISTS `sys_dict_item`;
+CREATE TABLE `sys_dict_item` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `dict_code` varchar(64) NOT NULL COMMENT '关联字典类型编码',
+  `item_code` varchar(64) NOT NULL COMMENT '字典项编码（如：MALE）',
+  `item_name` varchar(100) NOT NULL COMMENT '字典项名称（如：男）',
+  `item_sort` int(11) DEFAULT '0' COMMENT '排序',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态：0=禁用，1=启用',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_dict_code` (`dict_code`),
+  UNIQUE KEY `uk_dict_item` (`dict_code`, `item_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典明细表';
+
+-- 字典类型菜单
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (21, NOW(), '字典类型', 1, 1, 'sysDictType', 'ums-menu', 0);
+
+-- 字典明细菜单
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (21, NOW(), '字典明细', 1, 2, 'sysDictItem', 'ums-menu', 0);
+
+-- 初始化字典数据
+INSERT INTO `sys_dict_type` (dict_code, dict_name, category, description, status, sort, create_time, update_time) VALUES ('SEX', '性别', '基础数据', '性别字典', 1, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('SEX', 'MALE', '男', 1, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('SEX', 'FEMALE', '女', 2, 1, NOW(), NOW());
+
+INSERT INTO `sys_dict_type` (dict_code, dict_name, category, description, status, sort, create_time, update_time) VALUES ('DRUG_TYPE', '药材类型', '药材业务', '药材类型字典', 1, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('DRUG_TYPE', 'WESTERN', '西药', 1, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('DRUG_TYPE', 'TCM', '中成药', 2, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('DRUG_TYPE', 'HERB', '中药饮片', 3, 1, NOW(), NOW());
+
+INSERT INTO `sys_dict_type` (dict_code, dict_name, category, description, status, sort, create_time, update_time) VALUES ('OUT_TYPE', '出库方式', '药材业务', '药材出库方式字典', 1, 2, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'NORMAL', '正常出库', 1, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'ERROR', '信息错误', 2, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'EXPIRED', '过期出库', 3, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'DAMAGED', '报损出库', 4, 1, NOW(), NOW());
+INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'INVENTORY', '盘点出库', 5, 1, NOW(), NOW());
