@@ -627,10 +627,10 @@ CREATE TABLE `sys_dict_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典明细表';
 
 -- 字典类型菜单
-INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (21, NOW(), '字典类型', 1, 1, 'sysDictType', 'ums-menu', 0);
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (32, NOW(), '字典类型', 1, 1, 'sysDictType', 'ums-menu', 0);
 
 -- 字典明细菜单
-INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (21, NOW(), '字典明细', 1, 2, 'sysDictItem', 'ums-menu', 0);
+INSERT INTO `ums_menu` (parent_id, create_time, title, level, sort, name, icon, hidden) VALUES (32, NOW(), '字典明细', 1, 2, 'sysDictItem', 'ums-menu', 0);
 
 -- 初始化字典数据
 INSERT INTO `sys_dict_type` (dict_code, dict_name, category, description, status, sort, create_time, update_time) VALUES ('SEX', '性别', '基础数据', '性别字典', 1, 1, NOW(), NOW());
