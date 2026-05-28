@@ -76,6 +76,21 @@ public class SysDictItemController {
         return CommonResult.failed("更新失败");
     }
 
+    @ApiOperation("修改字典明细状态")
+    @RequestMapping(value = "/updateStatus/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<Void> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
+        SysDictItem item = new SysDictItem();
+        item.setId(id);
+        item.setStatus(status);
+        item.setUpdateTime(new Date());
+        boolean success = dictItemService.updateById(item);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed("状态更新失败");
+    }
+
     @ApiOperation("删除字典明细")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     @ResponseBody

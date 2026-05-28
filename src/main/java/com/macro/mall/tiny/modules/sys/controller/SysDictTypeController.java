@@ -80,6 +80,21 @@ public class SysDictTypeController {
         return CommonResult.failed("更新失败");
     }
 
+    @ApiOperation("修改字典类型状态")
+    @RequestMapping(value = "/updateStatus/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<Void> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
+        SysDictType dictType = new SysDictType();
+        dictType.setId(id);
+        dictType.setStatus(status);
+        dictType.setUpdateTime(new Date());
+        boolean success = dictTypeService.updateById(dictType);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed("状态更新失败");
+    }
+
     @ApiOperation("删除字典类型")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     @ResponseBody

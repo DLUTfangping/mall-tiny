@@ -190,6 +190,8 @@ public class MedicineStockServiceImpl extends ServiceImpl<MedicineStockMapper, M
             item.put("unitPrice", stock.getUnitPrice());
             item.put("productionDate", stock.getProductionDate());
             item.put("expiryDate", stock.getExpiryDate());
+            item.put("unit", stock.getUnit());
+            item.put("baseUnit", stock.getBaseUnit());
             result.add(item);
         }
         return result;
