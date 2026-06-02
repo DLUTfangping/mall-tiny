@@ -648,3 +648,26 @@ INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status,
 INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'EXPIRED', '过期出库', 3, 1, NOW(), NOW());
 INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'DAMAGED', '报损出库', 4, 1, NOW(), NOW());
 INSERT INTO `sys_dict_item` (dict_code, item_code, item_name, item_sort, status, create_time, update_time) VALUES ('OUT_TYPE', 'INVENTORY', '盘点出库', 5, 1, NOW(), NOW());
+
+-- 有效期预警颜色配置表
+DROP TABLE IF EXISTS `medicine_validity_warning_config`;
+CREATE TABLE `medicine_validity_warning_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `level_code` varchar(32) NOT NULL COMMENT '级别编码',
+  `level_name` varchar(64) NOT NULL COMMENT '级别名称',
+  `min_days` int NOT NULL DEFAULT 0 COMMENT '最小天数（含）',
+  `max_days` int NOT NULL COMMENT '最大天数（含），-1表示无上限',
+  `color` varchar(32) NOT NULL COMMENT '显示颜色',
+  `sort` int(11) DEFAULT 0 COMMENT '排序',
+  `enabled` tinyint(1) DEFAULT 1 COMMENT '是否启用',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_level_code` (`level_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='有效期预警颜色配置表';
+
+-- 初始化有效期预警配置数据
+INSERT INTO `medicine_validity_warning_config` (level_code, level_name, min_days, max_days, color, sort, enabled, create_time, update_time) VALUES ('URGENT', '紧急', 0, 30, '#FF0000', 1, 1, NOW(), NOW());
+INSERT INTO `medicine_validity_warning_config` (level_code, level_name, min_days, max_days, color, sort, enabled, create_time, update_time) VALUES ('WARNING', '警告', 31, 60, '#FF9933', 2, 1, NOW(), NOW());
+INSERT INTO `medicine_validity_warning_config` (level_code, level_name, min_days, max_days, color, sort, enabled, create_time, update_time) VALUES ('NOTICE', '注意', 61, 120, '#FFCC00', 3, 1, NOW(), NOW());
+INSERT INTO `medicine_validity_warning_config` (level_code, level_name, min_days, max_days, color, sort, enabled, create_time, update_time) VALUES ('NORMAL', '正常', 121, -1, '#52C41A', 4, 1, NOW(), NOW());

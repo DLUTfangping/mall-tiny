@@ -47,6 +47,7 @@
 | `fms` | 财务模块 (Financial Management) |
 | `com` | 通用模块 (Common) |
 | `classify` | 分类模块 (Classification) |
+| `medicine` | 药材管理模块 (药品、库存、入库、出库、预警等) |
 
 ## Repositories
 
@@ -98,3 +99,20 @@ java -jar target/mall-tiny-1.0.0-SNAPSHOT.jar
 # Docker build
 docker build -t mall-tiny .
 ```
+
+## Medicine Module Features
+
+### 有效期预警颜色配置
+- 可配置多个时间段及对应颜色
+- 支持启用/禁用配置
+- 表: `medicine_validity_warning_config`
+
+### 药材库存
+- 批次视图和药品总库存视图
+- 有效期颜色预警显示
+- 库存预警（最高/最低库存）
+
+### 药材入库/出库
+- 药品下拉表格选择（对齐样式）
+- 批号管理
+- 入库/出库明细

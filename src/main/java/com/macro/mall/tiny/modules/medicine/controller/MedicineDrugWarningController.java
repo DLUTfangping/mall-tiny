@@ -36,7 +36,14 @@ public class MedicineDrugWarningController {
     @ResponseBody
     public CommonResult<Void> save(@RequestBody MedicineDrugWarning warning) {
         warning.setUpdateTime(new Date());
-        if (warning.getId() == null) {
+        // 检查是否已存在该药品的预警配置
+        MedicineDrugWarning existWarning = drugWarningService.lambdaQuery()
+                .eq(MedicineDrugWarning::getDrugCode, warning.getDrugCode())
+                .one();
+        if (existWarning != null) {
+            warning.setId(existWarning.getId());
+            warning.setCreateTime(existWarning.getCreateTime());
+        } else {
             warning.setCreateTime(new Date());
         }
         boolean success = drugWarningService.saveOrUpdate(warning);

@@ -139,6 +139,7 @@ public class MedicineStockServiceImpl extends ServiceImpl<MedicineStockMapper, M
                         stock.setMaxWarningStock(warning.getMaxWarningStock());
                         stock.setBatchWarningEnabled(warning.getBatchWarningEnabled());
                         stock.setBatchWarningThreshold(warning.getBatchWarningThreshold());
+                        stock.setValidityWarningEnabled(warning.getValidityWarningEnabled());
                     }
                 }
             } catch (Exception e) {

@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Read(//Users/pikaqiu/Documents/front/mall-admin-web/**)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "mcp__mcp_server_mysql__mysql_query",
+      "Bash(mvn compile *)",
+      "Bash(ls *)",
+      "Bash(cp /Users/pikaqiu/.claude/skills/medicine-menu-generator.md /Users/pikaqiu/Documents/backend/mall-tiny/.claude/skills/)",
+      "Bash(rm /Users/pikaqiu/.claude/skills/medicine-menu-generator.md)",
+      "Bash(mkdir -p /Users/pikaqiu/Documents/front/mall-admin-web/.claude/rule)",
+      "Bash(mv /Users/pikaqiu/Documents/front/mall-admin-web/FRONTEND_RULES.md /Users/pikaqiu/Documents/front/mall-admin-web/.claude/rule/)"
     ]
   }
 }

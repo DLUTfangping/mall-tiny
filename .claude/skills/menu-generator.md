@@ -409,6 +409,41 @@ export default {
 </style>
 ```
 
+## 菜单重复检查（重要）
+
+**在生成代码之前，必须先检查菜单是否已存在：**
+
+```sql
+-- 检查一级菜单是否重复
+SELECT id, name, title FROM ums_menu WHERE name = '{parentName}' AND level = 0;
+
+-- 检查二级菜单是否重复（在对应父菜单下）
+SELECT id, name, title, parent_id FROM ums_menu WHERE name = '{name}' AND level = 1;
+```
+
+### 重复处理规则
+
+| 情况 | 处理方式 |
+|------|---------|
+| 一级菜单 name 重复 | 更换一级菜单标识（name 字段），或选择已有菜单添加二级 |
+| 二级菜单 name 重复 | 更换二级菜单标识（name 字段），确保与该父菜单下其他子菜单不重复 |
+| 二级菜单 title 重复 | 更换二级菜单名称（title 字段），title 是显示名称 |
+
+### 检查示例
+
+```sql
+-- 假设要添加"用户管理"菜单
+-- 检查 medicine 是否已存在
+SELECT id, name, title FROM ums_menu WHERE name = 'medicine' AND level = 0;
+-- 如果返回结果，说明 medicine 已存在，应该添加二级菜单而不是新建一级菜单
+
+-- 检查 user 是否已在 medicine 下存在
+SELECT id, name, title, parent_id FROM ums_menu WHERE name = 'user' AND level = 1;
+-- 如果返回结果且 parent_id 指向 medicine，说明 user 已存在，需要更换名称
+```
+
+---
+
 ## 添加一级菜单（新建父菜单 + 二级菜单）
 
 ### SQL

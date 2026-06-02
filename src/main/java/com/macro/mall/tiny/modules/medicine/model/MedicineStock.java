@@ -101,6 +101,10 @@ public class MedicineStock {
     @ApiModelProperty(value = "批号预警阈值")
     private BigDecimal batchWarningThreshold;
 
+    @TableField(exist = false)
+    @ApiModelProperty(value = "有效期预警是否启用")
+    private Integer validityWarningEnabled;
+
     @ApiModelProperty(value = "生产日期")
     private Date productionDate;
 
